@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import GameField from "./views/Game";
 import Home from "./views/Home";
 import Highscore from "./views/Highscore";

@@ -2,15 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+html{
+    font-family: "Roboto", sans-serif;
+}
+
 #root {
     height: 100vh;
     width: 100%;
-    display: flex;
+    --fs: clamp(3rem, 8vw, 7rem);
+    --ls: clamp(-1.75px, -0.25vw, -3.5px);
 }
 
 #board {
-    border: 5px solid #58c7f30f;
+    border: 4px solid #1fd8ff;
     border-radius: 10px;
+    box-shadow: 1px 1px 20px 4px rgb(0 205 252);
 }
 
 .swal-text, .swal-title{
@@ -20,3 +26,158 @@
 .swal-overlay--show-modal .swal-modal{
     min-height: 350px;
 }
+
+body {
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  .space {
+    background: rgb(5 10 81 / 2%) center / 200px 200px round;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+  }
+  
+  .stars1 {
+    animation: space 40s ease-in-out infinite;
+    background-image: 
+      radial-gradient(1px 1px at 25px 5px, white, rgba(255, 255, 255, 0)), 
+      radial-gradient(1px 1px at 50px 25px, white, rgba(255, 255, 255, 0)), 
+      radial-gradient(1px 1px at 125px 20px, white, rgba(255, 255, 255, 0)), 
+      radial-gradient(1.5px 1.5px at 50px 75px, white, rgba(255, 255, 255, 0)), 
+      radial-gradient(2px 2px at 15px 125px, white, rgba(255, 255, 255, 0)), 
+      radial-gradient(2.5px 2.5px at 110px 80px, white, rgba(255, 255, 255, 0));
+  }
+  
+  .stars2 {
+    animation: space 80s ease-in-out infinite;
+    background-image: 
+      radial-gradient(1px 1px at 75px 125px, white, rgba(255, 255, 255, 0)), 
+      radial-gradient(1px 1px at 100px 75px, white, rgba(255, 255, 255, 0)), 
+      radial-gradient(1.5px 1.5px at 199px 100px, white, rgba(255, 255, 255, 0)), 
+      radial-gradient(2px 2px at 20px 50px, white, rgba(255, 255, 255, 0)), 
+      radial-gradient(2.5px 2.5px at 100px 5px, white, rgba(255, 255, 255, 0)), 
+      radial-gradient(2.5px 2.5px at 5px 5px, white, rgba(255, 255, 255, 0));
+  }
+  
+  .stars3 {
+    animation: space 120s ease-in-out infinite;
+    background-image: 
+      radial-gradient(1px 1px at 10px 10px, white, rgba(255, 255, 255, 0)), 
+      radial-gradient(1px 1px at 150px 150px, white, rgba(255, 255, 255, 0)), 
+      radial-gradient(1.5px 1.5px at 60px 170px, white, rgba(255, 255, 255, 0)), 
+      radial-gradient(1.5px 1.5px at 175px 180px, white, rgba(255, 255, 255, 0)), 
+      radial-gradient(2px 2px at 195px 95px, white, rgba(255, 255, 255, 0)), 
+      radial-gradient(2.5px 2.5px at 95px 145px, white, rgba(255, 255, 255, 0));
+  }
+  
+  @keyframes space {
+    40% {
+      opacity: 0.75;
+    }
+    50% {
+      opacity: 0.25;
+    }
+    60% {
+      opacity: 0.75;
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .kave-btn {
+    position: relative;
+    border: solid 1px rgba(0, 214, 252, 0.3);
+    background: none;
+    color: rgba(0, 214, 252, 0.5);
+    text-transform: uppercase;
+    font-weight: normal;
+    letter-spacing: 1.8px;
+    width: 200px;
+    height: 70px;
+    padding: 0;
+    transition: all 0.25s ease;
+    outline: none;
+    border-radius: 10px;
+    margin: auto;
+}
+.kave-btn:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 10%;
+    width: 60px;
+    height: 1px;
+    transform: translateY(-1px);
+    background: rgba(0, 214, 252, 1);
+    transition: all 0.25s ease;
+}
+.kave-btn:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    right: 10%;
+    width: 60px;
+    height: 1px;
+    transform: translateY(1px);
+    background: rgba(0, 214, 252, 1);
+    transition: all 0.25s ease;
+}
+.kave-btn.active {
+    box-shadow: 1px 1px 8px rgba(0, 214, 252, 0.3);
+    color: rgba(0, 214, 252, 1);
+    text-shadow: 0 0 8px rgba(0, 214, 252, 0.4);
+    font-weight: 800;
+}
+.glow{
+    color: rgba(0, 214, 252, 1);
+    text-shadow: 0 0 20px rgb(9 187 255);
+}
+.kave-btn.active.kave-btn:before {
+    left: 0;
+    width: 20px;
+}
+.kave-btn.active.kave-btn:after {
+    right: 0;
+    width: 20px;
+}
+.kave-btn.active .kave-line:before {
+    bottom: 0;
+}
+.kave-btn.active .kave-line:after {
+    top: 0;
+}
+.kave-line:before {
+    content: "";
+    position: absolute;
+    bottom: 30%;
+    right: 0;
+    width: 1px;
+    height: 20px;
+    transform: translateX(1px);
+    background: rgba(0, 214, 252, 1);
+    transition: all 0.25s ease;
+}
+.kave-line:after {
+    content: "";
+    position: absolute;
+    top: 30%;
+    left: 0;
+    width: 1px;
+    height: 20px;
+    transform: translateX(-1px);
+    background: rgba(0, 214, 252, 1);
+    transition: all 0.25s ease;
+}
+
+.title {
+    text-transform: uppercase;
+    font-size: var(--fs);
+    font-weight: 800;
+    letter-spacing: var(--ls);
+  }
