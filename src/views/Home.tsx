@@ -4,20 +4,20 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import backgroundMusic from "../assets/game.mp3";
 import AudioComponent from "../components/Audio";
+import QuestionDialogCmp from "../components/QuestionDialog";
 
 const Home: React.FC<HomeProps> = ({ }) => {
     const [activeIndex, setActiveIndex] = useState(0);
-
-
     const navigate = useNavigate();
 
-    const startGame = (): void => {
+    const goToGame = (): void => {
         playSound();
         navigate("/game");
     };
 
-    const highscore = (): void => {
-        navigate("/score");
+    const goToHighscore = (): void => {
+        playSound();
+        navigate("/scores");
     };
 
     const playSound = () => {
@@ -28,10 +28,10 @@ const Home: React.FC<HomeProps> = ({ }) => {
     const handlePress = () => {
         switch (activeIndex) {
             case 0:
-                startGame();
+                goToGame();
                 break;
             case 1:
-                highscore();
+                goToHighscore();
                 break;
             default:
                 break;
@@ -40,6 +40,10 @@ const Home: React.FC<HomeProps> = ({ }) => {
 
     useEffect(() => {
         const handleKeyPress = (event: KeyboardEvent) => {
+            event.preventDefault();
+            event.stopPropagation();
+            console.log("key", event.key, "code", event.keyCode);
+
             switch (event.key) {
                 case 'ArrowUp':
                     setActiveIndex((prev) => (prev + 1) % 2);
@@ -62,8 +66,6 @@ const Home: React.FC<HomeProps> = ({ }) => {
         };
     }, [activeIndex]);
 
-
-
     return (
         <div className="hero min-h-screen bg-base-200">
             <div className="hero-content text-center">
@@ -80,14 +82,13 @@ const Home: React.FC<HomeProps> = ({ }) => {
                             <span className="kave-line"></span>
                             Highscore
                         </button>
-
                     </div>
                 </div>
             </div>
             <AudioComponent
                 onAudioEnd={() => { }}
                 path={backgroundMusic}
-                volume={0.01}
+                volume={0.005}
             />
         </div>
     );

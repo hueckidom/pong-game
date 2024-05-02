@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import swal from "sweetalert";
+import buttonClickSound from "../assets/button-click-sound.mp3";
+import correctSound from "../assets/correct.mp3";
+import wrongSound from "../assets/wrong.mp3";
 import {
     MultiplePlayerModeProps,
     ball,
@@ -7,25 +9,28 @@ import {
 } from "../utils/types";
 import hitSound from "../assets/Paddle Ball Hit Sound Effect HD.mp3";
 import goalSound from "../assets/goal.mp3";
-import buttonClickSound from "../assets/button-click-sound.mp3";
 import { useNavigate } from "react-router-dom";
 import AudioComponent from "../components/Audio";
 import backgroundMusic from "../assets/game.mp3";
 import { speedOptions, timeToSpeed as determineVelocity } from "../utils/options";
 import { determineBoardWidth } from "../utils/board";
+import QuestionDialogCmp from "../components/QuestionDialog";
+
+let isPlaying1 = false;
+let bubble: any = null;
 
 const GameField: React.FC<MultiplePlayerModeProps> = ({
-    settings,
 }) => {
     let boardWidth: number = determineBoardWidth();
-    let boardHeight: number = boardWidth / 2;
+    let boardHeight: number = boardWidth / 1.7;
     let context: CanvasRenderingContext2D;
     let board: HTMLCanvasElement;
     let playerWidth: number = 8;
     let playerHeight: number = 60;
     let playerVelocityY = 0;
     let moveSpeed = 3;
-    let maxVelocity = 4.5;
+    let maxVelocity = 4;
+    let maxLife = 3;
 
     let player1: player = {
         x: 2,
@@ -33,7 +38,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
         width: playerWidth,
         height: playerHeight,
         velocityY: playerVelocityY,
-        stopPlayer: false,
+        stopPlayer: false
     };
 
     let player2: player = {
@@ -56,27 +61,29 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
         velocityY: speedOptions["slow"].velocityY,
     };
 
-    const [firstPlayerName, setFirstNamePlayer] = useState<string>("Player 1");
-    const [secondPlayerName, setSecondNamePlayer] = useState("Player 2");
     const [playHit, setPlayHit] = useState<boolean>(false);
     const [playGoal, setPlayGoal] = useState<boolean>(false);
     const [isPaused, setIsPaused] = useState<boolean>(false);
+    const [isQuestion, setIsQuestion] = useState<boolean>(false);
     const [isBackgroundMusicPlaying, setBackgroundMusicPlaying] =
         useState<boolean>(false);
 
-    const backgroundMusicRef = useRef<HTMLAudioElement | null>(null);
-
     const [timer, setTimer] = useState(0);
-
+    const timeRef = useRef<number>(0);
+    const [life, setLife] = useState(maxLife);
     const timerRef = useRef<number | null>(null);
 
     const startTimer = (): void => {
         timerRef.current = window.setInterval(() => {
-            if (isPlaying1) {
+            if (isPlaying1 && !isPaused) {
                 setTimer((prevTimer) => prevTimer + 1);
             }
         }, 1000);
     };
+
+    useEffect(() => {
+        timeRef.current = timer;
+    }, [timer]);
 
     const resetTimer = () => {
         setTimer(0);
@@ -84,11 +91,8 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
             clearInterval(timerRef.current);
         }
     };
-    let isPlaying1 = false;
     const score = useRef<number>(0);
     const navigate = useNavigate();
-    let firstPlayerName1: string = firstPlayerName;
-    let secondPlayerName1: string = secondPlayerName;
 
     const detectCollision = (a: any, b: any) => {
         return (
@@ -103,94 +107,70 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
 
     useEffect(() => {
         backgroundAudio.volume = 0.18;
-
-        if (isPlaying1) {
-            backgroundAudio.play();
-        } else {
-            backgroundAudio.pause();
-            backgroundAudio.currentTime = 0;
-        }
+        backgroundAudio.play();
 
         return () => {
             backgroundAudio.pause();
             backgroundAudio.currentTime = 0;
         };
-    }, [isPlaying1]);
+    }, []);
 
     const outOfBound = (y: number) => {
         return y < 0 || y + player1.height > boardHeight;
     };
 
-    const win = (playerName: string) => {
-        isPlaying1 = false;
-
-        resetScores();
-
-        if (backgroundMusicRef.current) {
-            backgroundMusicRef.current.pause();
-            setBackgroundMusicPlaying(false);
-        }
-
-        alert(`${playerName} wins !`);
-        swal({
-            title: `Feedback!`,
-            text: `Ready for another round? Click 'Play again' to dive back into the excitement! :))`,
-            buttons: {
-                home: "Go to Home",
-                star: "Star GitHub⭐",
-                // menu: "Return to menu",
-                play: "Play again",
-            } as any,
-            className: "btn",
-        }).then((value) => {
-            console.log(value);
-            if (value === "menu") {
-                isPlaying1 = false;
-                resetScores();
-                // later we will change this to creat a menu
-            } else if (value === "home") {
-                navigate("/");
-            } else if (value === "play") {
-                // play again
-                resetTimer();
-                startTimer();
-            } else {
-                // navigate("/https://github.com/Ramzi-Abidi/Pong");
-                // window.location.href = '';
-                window.open("https://github.com/Ramzi-Abidi/Pong", "_blank");
-                navigate("/");
-            }
-        });
+    const startBubbleTimer = () => {
+        const spawnInterval = Math.random() * 1000 + 3000;
+        setTimeout(spawnBubble, spawnInterval);
     };
 
-    let bubble: any = null;
+    const handleCorrectAnswer = () => {
+        const audio = new Audio(correctSound);
+        audio.play();
+        score.current += timeRef.current;
+        setIsQuestion(false);
+        setTimeout(() => {
+            triggerPause();
+            bubble = null;
+            startBubbleTimer();
+        }, 250);
+    }
 
+    const handleWrongAnswer = () => {
+        const audio = new Audio(wrongSound);
+        audio.play();
+        setIsQuestion(false);
+        setLife((prevLife) => prevLife - 1);
 
-    useEffect(() => {
-        setTimeout(spawnBubble, 5000); // Spawn a bubble every 5 seconds
-
-    }, []);
+        setTimeout(() => {
+            triggerPause();
+            bubble = null;
+            startBubbleTimer();
+        }, 250);
+    }
 
     const drawBubble = () => {
         if (!bubble) return;
 
         context.beginPath();
         context.arc(bubble.x, bubble.y, bubble.radius, 0, Math.PI * 2);
-        context.fillStyle = 'lightblue';
+        context.fillStyle = '#fff';
         context.fill();
-        context.font = '16px Arial';
+        context.font = '13px Arial';
         context.fillStyle = '#000';
         context.textAlign = 'center';
-        context.fillText('?', bubble.x, bubble.y + 6); // Center the question mark in the bubble
+        context.fillText('?', bubble.x, bubble.y + 6);
     };
 
     const spawnBubble = () => {
+        if (bubble) return;
+
         bubble = {
-            x: Math.random() * boardWidth,
-            y: Math.random() * boardHeight,
-            radius: 20,
-            velocityX: (Math.random() - 0.5) * 4, // Random horizontal velocity
-            velocityY: (Math.random() - 0.5) * 4  // Random vertical velocity
+            x: boardWidth / 2,
+            y: Math.random() * boardHeight / 1.5 + 20,
+            radius: 13,
+            velocityX: (Math.random() - 0.8) * 2,
+            velocityY: 1.2
         };
     };
 
@@ -227,11 +207,20 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
     };
 
     const handleBubbleTouch = () => {
-        swal("You found a mystery bubble!", "Special event triggered!", "success");
+        triggerPause();
+        const audio = new Audio(buttonClickSound);
+        audio.play();
+        setIsQuestion(true);
     };
 
+    useEffect(() => {
+        if (life === 0) {
+            navigate('/enter-score?score=' + score.current);
+        }
+    }, [life]);
+
     const animate = (): void => {
-        requestAnimationFrame(animate); // The requestAnimationFrame() method used to repeat something pretty fast :) => alternative to setInterval()
+        requestAnimationFrame(animate); // The requestAnimationFrame() => alternative to setInterval()
 
         if (isPlaying1 === true) {
             setBackgroundMusicPlaying(true);
@@ -239,7 +228,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
             context.clearRect(0, 0, boardWidth, boardHeight);
 
             // moving the player 1 up and down
-            context.fillStyle = "skyBlue";
+            context.fillStyle = "#00f6ff";
             if (!outOfBound(player1.y + player1.velocityY)) {
                 if (player1.stopPlayer === false) {
                     player1.y += player1.velocityY;
@@ -291,15 +280,19 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
                 setPlayHit(true);
                 // left side of ball touches right side of player1
                 if (ball.x <= player1.x + player1.width) {
-                    ball.velocityX *= ball.velocityX < -maxVelocity ? -1 : -1.2;
-
+                    ball.velocityX *= ball.velocityX < -maxVelocity ? -1 : -1.15;
                 }
+
+                score.current += timeRef.current;
+
             } else if (detectCollision(ball, player2)) {
                 setPlayHit(true);
                 // right side of ball touches left side player2
                 if (ball.x + ballWidth >= player2.x) {
-                    ball.velocityX *= ball.velocityX > maxVelocity ? -1 : -1.2;
+                    ball.velocityX *= ball.velocityX > maxVelocity ? -1 : -1.15;
                 }
+
+                score.current += timeRef.current;
             }
             const resetGame = (direction: number) => {
                 ball = {
@@ -308,25 +301,20 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
                     width: ballWidth,
                     height: ballHeight,
                     velocityX: direction,
-                    velocityY: ball.velocityY * 1.5,
+                    velocityY: ball.velocityY * 1.4,
                 };
             };
 
             // scoring goal
             if (isPlaying1) {
-
                 if (ball.x < 0) {
                     setPlayGoal(true);
-                    if (ball.velocityX > maxVelocity || ball.velocityX < -maxVelocity) {
-                        ball.velocityX = maxVelocity / 1.5;
-                    }
-                    resetGame(ball.velocityX);
+                    setLife((prevLife) => prevLife - 1);
+                    resetGame(2);
                 } else if (ball.x + ballWidth > boardWidth) {
                     setPlayGoal(true);
-                    if (ball.velocityX > maxVelocity || ball.velocityX < -maxVelocity) {
-                        ball.velocityX = maxVelocity / 1.5;
-                    }
-                    resetGame(ball.velocityX);
+                    setLife((prevLife) => prevLife - 1);
+                    resetGame(2);
                 }
             }
 
@@ -357,12 +345,13 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
 
         // to pause
         if (e.key === "p" || e.key === "Escape") {
-            const popup = document.querySelector(".btn");
-            if (popup === null) {
-                isPlaying1 = !isPlaying1;
-                setIsPaused((isPaused) => !isPaused);
-            }
+            triggerPause();
         }
+    };
+
+    const triggerPause = () => {
+        isPlaying1 = !isPlaying1;
+        setIsPaused((isPaused) => !isPaused);
     };
 
     const resetScores = (): void => {
@@ -382,10 +371,8 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
     useEffect(() => {
         const handleVisibilityChange = () => {
             if (document.hidden) {
-                const btn = document.querySelector(".btn");
-                if (btn === null && isPlaying1 === true) {
-                    isPlaying1 = !isPlaying1;
-                    setIsPaused((prevState) => !prevState);
+                if (isPlaying1 === true) {
+                    triggerPause();
                 }
             }
         };
@@ -411,10 +398,12 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
         startTimer();
         resetScores();
         isPlaying1 = true;
+        bubble = null;
         // loop of game
         requestAnimationFrame(animate);
         window.addEventListener("keydown", movePlayer);
         window.addEventListener("keyup", stopMovingPlayer);
+        startBubbleTimer();
 
         return () => {
             resetTimer();
@@ -438,7 +427,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     </div>
                     <div className="stat-title">Score</div>
-                    <div className="stat-value text-secondary glow">4,200</div>
+                    <div className="stat-value text-secondary glow">{score.current}</div>
                 </div>
 
                 <div className="stat place-items-center">
@@ -446,16 +435,10 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                     </div>
                     <div className="stat-title">Life</div>
-                    <div className="stat-value opacity-75">3</div>
+                    <div className="stat-value opacity-75">{life}</div>
                 </div>
 
             </div>
-
-            {isPaused && (
-                <h2 className="game-paused-info">
-                    Game is paused, press p to resume!
-                </h2>
-            )}
 
             {/* Game board  */}
             <div className="gradient-border">
@@ -483,6 +466,16 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
                     path={backgroundMusic}
                     volume={0.05}
                 />
+            )}
+
+            {isQuestion && (
+                <QuestionDialogCmp correct={handleCorrectAnswer} wrong={handleWrongAnswer} />
+            )}
+
+            {isPaused && (
+                <h2 className="game-paused-info text-purple-400">
+                    Game is paused
+                </h2>
             )}
         </section>
     );

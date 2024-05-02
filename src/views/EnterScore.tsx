@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getScores, saveScore } from "../utils/scores";
 
-const Highscore: React.FC = () => {
+const EnterScore: React.FC = () => {
     const [teamName, setTeamName] = useState('');
     const [currentLetter, setCurrentLetter] = useState('A');
     const [activeIndex, setActiveIndex] = useState(0); // 0: Letter, 1: Remove, 2: Confirm
+    const [score, setScore] = useState<number>(0);
+    const currentScores = getScores();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -36,6 +39,13 @@ const Highscore: React.FC = () => {
         };
 
         window.addEventListener('keydown', handleKeyPress);
+
+        // get score from params
+        const urlParams = new URLSearchParams(window.location.search);
+        const scoreParam = urlParams.get('score');
+        if (scoreParam) {
+            setScore(parseInt(scoreParam));
+        }
 
         return () => {
             window.removeEventListener('keydown', handleKeyPress);
@@ -73,24 +83,27 @@ const Highscore: React.FC = () => {
     };
 
     const confirmName = () => {
-        console.log('Team Name:', teamName); // For demo, replace with actual action
-        navigate('/next-route'); // Change to your desired route
+        if (teamName.length === 0) return;
+
+        saveScore(score, teamName);
+        navigate('/scores');
     };
 
     return (
         <div className="hero min-h-screen bg-base-200">
             <div className="hero-content text-left flex-col">
-                <div className="text-4xl ">Your highscore is</div>
+                <div className="text-4xl ">Your score: {score}</div>
                 <div>
                     <div className="flex gap-2">
-                        <span>Your team name:</span>
-                        <div>{teamName}</div>
+                        <span>Your team name: </span>
+                        <div>{teamName}<span className="blink-ani ml-1">{currentLetter}</span></div>
+
                     </div>
                     <div>
                         <div className={"p-4 text-center flex gap-2"}>
-                            <kbd className="kbd">◀︎</kbd>
+                            <kbd className="p-2">◀︎</kbd>
                             <span className={(activeIndex === 0 ? "bg-primary" : "") + " kbd"}>{currentLetter}</span>
-                            <kbd className="kbd">▶︎</kbd>
+                            <kbd className="p-2">▶︎</kbd>
                         </div>
                         <div className="flex gap-4 p-4">
                             <div className={"p-2 kbd " + (activeIndex === 1 ? "bg-primary" : "")} onClick={removeLastLetter}>
@@ -107,4 +120,4 @@ const Highscore: React.FC = () => {
     );
 };
 
-export default Highscore;
+export default EnterScore;

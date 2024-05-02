@@ -22,6 +22,11 @@ export interface AudioComponentProps {
     volume: number;
 }
 
+export interface QuestionDialogProps {
+    correct: () => void;
+    wrong: () => void;
+}
+
 export interface MultiplePlayerModeProps {
     settings: SettingProps;
 }
@@ -34,4 +39,18 @@ export interface SinglePlayerModeProps {
 export interface SettingProps {
     speedOption: string;
     pointOption: number;
+}
+
+export interface Score {
+    name: string;
+    score: number;
+}
+
+export interface Question {
+    question: string;
+    A: string;
+    B: string;
+    C: string;
+    D: string;
+    answer: string;
 }
