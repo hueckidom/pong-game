@@ -30,7 +30,10 @@ const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
     };
 
     const handleSpace = () => {
-        if (indexToAlpha(activeIndex) == question?.answer) {
+        console.log("activeIndex: ", activeIndex);
+        const answerToIndex = indexToAlpha(activeIndex);
+        console.log("---", answerToIndex, "--- ANTOWRT: ", question?.answer);
+        if (answerToIndex == question?.answer) {
             correct();
         } else {
             wrong();
@@ -62,7 +65,7 @@ const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
         return () => {
             window.removeEventListener('keydown', handleKeyPress);
         };
-    }, [activeIndex]);
+    }, [activeIndex, question]);
 
     return (
         <div className="hero min-h-screen bg-base-300 fixed z-20 top-0 opacity-95 backdrop-blur-md">
