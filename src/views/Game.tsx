@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import buttonClickSound from "../assets/button-click-sound.mp3";
 import correctSound from "../assets/correct.mp3";
 import questionSound from "../assets/questions.mp3";
 import wrongSound from "../assets/wrong.mp3";
@@ -21,13 +20,13 @@ let isPlaying1 = false;
 let bubble: any = null;
 
 export let gameDefaults: BaseSettings = {
-    baseVelocityX: 1.2,
+    baseVelocityX: 1.5,
     baseVelocityY: 1.2,
     boardHeightDivisor: 1.7,
     maxBoardWidth: 700,
     maxLife: 3,
-    maxVelocityX: 4,
-    moveSpeed: 3.5,
+    maxVelocityX: 4.5,
+    moveSpeed: 4,
     playerHeight: 60,
     playerWidth: 8,
     key2Down: "s",
@@ -190,7 +189,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
             x: boardWidth / 2,
             y: Math.random() * boardHeight / 1.5 + 20,
             radius: 13,
-            velocityX: (Math.random() - 0.8) * 2,
+            velocityX: (Math.random() - 1.5) * 2.5,
             velocityY: 1.2
         };
     };
