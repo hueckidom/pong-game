@@ -20,13 +20,13 @@ let isPlaying1 = false;
 let bubble: any = null;
 
 export let gameDefaults: BaseSettings = {
-    baseVelocityX: 1.5,
+    baseVelocityX: 2,
     baseVelocityY: 1.2,
     boardHeightDivisor: 1.7,
     maxBoardWidth: 700,
     maxLife: 3,
-    maxVelocityX: 4.5,
-    moveSpeed: 4,
+    maxVelocityX: 5,
+    moveSpeed: 4.5,
     playerHeight: 60,
     playerWidth: 8,
     key2Down: "s",
@@ -149,6 +149,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
         audio.play();
         score.current += timeRef.current;
         setIsQuestion(false);
+        
         setTimeout(() => {
             triggerPause();
             bubble = null;

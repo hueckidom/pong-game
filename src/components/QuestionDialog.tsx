@@ -30,7 +30,7 @@ const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
     };
 
     const handleSpace = () => {
-        if (indexToAlpha(activeIndex) === question?.answer) {
+        if (indexToAlpha(activeIndex) == question?.answer) {
             correct();
         } else {
             wrong();
@@ -39,6 +39,9 @@ const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
 
     useEffect(() => {
         const handleKeyPress = (event: KeyboardEvent) => {
+            event.preventDefault();
+            event.stopPropagation();
+
             switch (event.key) {
                 case 'ArrowUp':
                     setActiveIndex((prev) => (prev > 0 ? prev - 1 : 0));
@@ -62,7 +65,7 @@ const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
     }, [activeIndex]);
 
     return (
-        <div className="hero min-h-screen bg-base-300 fixed z-20 top-0 opacity-90 backdrop-blur-md">
+        <div className="hero min-h-screen bg-base-300 fixed z-20 top-0 opacity-95 backdrop-blur-md">
             <div className="hero-content text-left flex-col">
                 <div className="text-xl font-bold">{question?.question}</div>
                 <div className="flex flex-col gap-2">
