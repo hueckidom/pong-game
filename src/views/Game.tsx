@@ -332,11 +332,11 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
                 if (ball.x < 0) {
                     setPlayGoal(true);
                     setLife((prevLife) => prevLife - 1);
-                    resetGame(2);
+                    resetGame(gameDefaults.baseVelocityX + 1);
                 } else if (ball.x + ballWidth > boardWidth) {
                     setPlayGoal(true);
                     setLife((prevLife) => prevLife - 1);
-                    resetGame(2);
+                    resetGame(gameDefaults.baseVelocityX + 1);
                 }
             }
 
