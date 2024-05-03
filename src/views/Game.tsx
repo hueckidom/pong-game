@@ -29,7 +29,15 @@ export let gameDefaults: BaseSettings = {
     maxVelocityX: 4,
     moveSpeed: 3.5,
     playerHeight: 60,
-    playerWidth: 8
+    playerWidth: 8,
+    key2Down: "s",
+    key2Up: "w",
+    keyDown: "ArrowDown",
+    keyUp: "ArrowUp"
+}
+
+export const assignGameDefaults = (settings: BaseSettings) => {
+    gameDefaults = settings;
 }
 
 const GameField: React.FC<MultiplePlayerModeProps> = ({
@@ -339,21 +347,21 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
     };
 
     const movePlayer = (e: any): void => {
-        if (e.key === "w" || e.key === "s") player1.stopPlayer = false;
+        if (e.key === gameDefaults.key2Up || e.key === gameDefaults.key2Down) player1.stopPlayer = false;
 
         // start moving the paddle (player2)
-        if (e.key === "ArrowUp" || e.key === "ArrowDown")
+        if (e.key === gameDefaults.keyUp || e.key === gameDefaults.keyDown)
             player2.stopPlayer = false;
 
-        if (e.key === "w") {
+        if (e.key === gameDefaults.key2Up) {
             player1.velocityY = -moveSpeed;
-        } else if (e.key === "s") {
+        } else if (e.key === gameDefaults.key2Down) {
             player1.velocityY = moveSpeed;
         }
 
-        if (e.key === "ArrowUp") {
+        if (e.key === gameDefaults.keyUp) {
             player2.velocityY = -moveSpeed;
-        } else if (e.key === "ArrowDown") {
+        } else if (e.key === gameDefaults.keyDown) {
             player2.velocityY = moveSpeed;
         }
 
@@ -373,11 +381,11 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
     };
 
     const stopMovingPlayer = (e: any): void => {
-        if (e.key === "w" || e.key === "s") {
+        if (e.key === gameDefaults.key2Up || e.key === gameDefaults.key2Down) {
             player1.stopPlayer = true;
         }
 
-        if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+        if (e.key === gameDefaults.keyDown || e.key === gameDefaults.keyUp) {
             player2.stopPlayer = true;
         }
     };

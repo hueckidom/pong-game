@@ -1,15 +1,6 @@
 import { useState, useEffect } from 'react';
-import { gameDefaults } from "./Game";
-// settings
-// baseVelocityX: number;
-// baseVelocityY: number;
-// maxLife: number;
-// maxVelocityX: number;
-// moveSpeed: number;
-// playerWidth: number;
-// playerHeight: number;
-// boardHeightDivisor: number;
-// maxBoardWidth: number;
+import { assignGameDefaults, gameDefaults } from "./Game";
+
 const Settings: React.FC = () => {
     const [settings, setSettings] = useState<any>({});
 
@@ -29,11 +20,13 @@ const Settings: React.FC = () => {
     useEffect(() => {
         if (Object.keys(settings).length === 0) return;
         localStorage.setItem('settings', JSON.stringify(settings));
+
+        assignGameDefaults(settings);
     }, [settings]);
 
     return (
         <div className="hero min-h-screen bg-base-200">
-            <div className="hero-content text-left flex-col bg-base-300 p-4 rounded-lg min-w-96">
+            <div className="hero-content text-left flex-col bg-base-300 p-4 rounded-lg min-w-96 max-h-screen overflow-auto">
                 <div className="text-xl font-bold">Settings</div>
                 <div className="flex gap-4 flex-col overflow-auto">
                     <div>
@@ -72,9 +65,23 @@ const Settings: React.FC = () => {
                         <label className="label">Max Board Width</label>
                         <input type="number" value={settings.maxBoardWidth} onChange={(e) => updateSetting('maxBoardWidth', e.target.value)} />
                     </div>
+                    <div>
+                        <label className="label">Key Up</label>
+                        <input type="text" value={settings.keyUp} onChange={(e) => updateSetting('keyUp', e.target.value)} />
+                    </div>
+                    <div>
+                        <label className="label">Key Down</label>
+                        <input type="text" value={settings.keyDown} onChange={(e) => updateSetting('keyDown', e.target.value)} />
+                    </div>
+                    <div>
+                        <label className="label">Key 2 Up</label>
+                        <input type="text" value={settings.key2Up} onChange={(e) => updateSetting('key2Up', e.target.value)} />
+                    </div>
+                    <div>
+                        <label className="label">Key 2 Down</label>
+                        <input type="text" value={settings.key2Down} onChange={(e) => updateSetting('key2Down', e.target.value)} />
+                    </div>
                 </div>
-
-
             </div>
         </div>
     );

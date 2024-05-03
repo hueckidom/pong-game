@@ -65,4 +65,8 @@ export interface BaseSettings{
     playerHeight: number;
     boardHeightDivisor: number;
     maxBoardWidth: number;
+    keyUp: string;
+    keyDown: string;
+    key2Up: string;
+    key2Down: string;
 }

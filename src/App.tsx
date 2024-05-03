@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useState } from "react";
-import GameField from "./views/Game";
+import { useEffect, useState } from "react";
+import GameField, { assignGameDefaults } from "./views/Game";
 import Home from "./views/Home";
 import Highscore from "./views/EnterScore";
 import ShowScores from "./views/ShowScores";
@@ -12,6 +12,13 @@ const App = () => {
         pointOption: 10
     });
 
+    useEffect(() => {
+        const defaults = localStorage.getItem('settings');
+        if (defaults) {
+            assignGameDefaults(JSON.parse(defaults));
+        }
+    }, []);
+    
     return (
         <Router>
             <Routes>
