@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import buttonClickSound from "../assets/button-click-sound.mp3";
 import correctSound from "../assets/correct.mp3";
+import questionSound from "../assets/questions.mp3";
 import wrongSound from "../assets/wrong.mp3";
 import {
+    BaseSettings,
     MultiplePlayerModeProps,
     ball,
     player,
@@ -12,25 +14,36 @@ import goalSound from "../assets/goal.mp3";
 import { useNavigate } from "react-router-dom";
 import AudioComponent from "../components/Audio";
 import backgroundMusic from "../assets/game.mp3";
-import { speedOptions, timeToSpeed as determineVelocity } from "../utils/options";
 import { determineBoardWidth } from "../utils/board";
 import QuestionDialogCmp from "../components/QuestionDialog";
 
 let isPlaying1 = false;
 let bubble: any = null;
 
+export let gameDefaults: BaseSettings = {
+    baseVelocityX: 1.2,
+    baseVelocityY: 1.2,
+    boardHeightDivisor: 1.7,
+    maxBoardWidth: 700,
+    maxLife: 3,
+    maxVelocityX: 4,
+    moveSpeed: 3.5,
+    playerHeight: 60,
+    playerWidth: 8
+}
+
 const GameField: React.FC<MultiplePlayerModeProps> = ({
 }) => {
     let boardWidth: number = determineBoardWidth();
-    let boardHeight: number = boardWidth / 1.7;
+    let boardHeight: number = boardWidth / gameDefaults.boardHeightDivisor;
     let context: CanvasRenderingContext2D;
     let board: HTMLCanvasElement;
-    let playerWidth: number = 8;
-    let playerHeight: number = 60;
+    let playerWidth: number = gameDefaults.playerWidth;
+    let playerHeight: number = gameDefaults.playerHeight;
     let playerVelocityY = 0;
-    let moveSpeed = 3;
-    let maxVelocity = 4;
-    let maxLife = 3;
+    let moveSpeed = gameDefaults.moveSpeed;
+    let maxVelocity = gameDefaults.maxVelocityX;
+    let maxLife = gameDefaults.maxLife;
 
     let player1: player = {
         x: 2,
@@ -57,8 +70,8 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
         y: boardHeight / 2,
         width: ballWidth,
         height: ballHeight,
-        velocityX: speedOptions["slow"].velocityX,
-        velocityY: speedOptions["slow"].velocityY,
+        velocityX: gameDefaults.baseVelocityX,
+        velocityY: gameDefaults.baseVelocityY,
     };
 
     const [playHit, setPlayHit] = useState<boolean>(false);
@@ -120,7 +133,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
     };
 
     const startBubbleTimer = () => {
-        const spawnInterval = Math.random() * 1000 + 3000;
+        const spawnInterval = Math.random() * 4000 + (10000);
         setTimeout(spawnBubble, spawnInterval);
     };
 
@@ -208,7 +221,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
 
     const handleBubbleTouch = () => {
         triggerPause();
-        const audio = new Audio(buttonClickSound);
+        const audio = new Audio(questionSound);
         audio.play();
         setIsQuestion(true);
     };
@@ -220,7 +233,8 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
     }, [life]);
 
     const animate = (): void => {
-        requestAnimationFrame(animate); // The requestAnimationFrame() => alternative to setInterval()
+        // requestAnimationFrame(animate);
+
 
         if (isPlaying1 === true) {
             setBackgroundMusicPlaying(true);
@@ -400,7 +414,9 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
         isPlaying1 = true;
         bubble = null;
         // loop of game
-        requestAnimationFrame(animate);
+        // requestAnimationFrame(animate);
+        setInterval(animate, 1000 / 60);
+
         window.addEventListener("keydown", movePlayer);
         window.addEventListener("keyup", stopMovingPlayer);
         startBubbleTimer();

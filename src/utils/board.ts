@@ -1,8 +1,10 @@
+import { gameDefaults } from "../views/Game";
+
 export const determineBoardWidth = () => {
     const width = document.body.clientWidth;
 
-    if (width > 700) {
-        return 700;
+    if (width > gameDefaults.maxBoardWidth) {
+        return gameDefaults.maxBoardWidth;
     }
 
     return width;

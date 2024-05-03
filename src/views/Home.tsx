@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import backgroundMusic from "../assets/game.mp3";
 import AudioComponent from "../components/Audio";
-import QuestionDialogCmp from "../components/QuestionDialog";
 
 const Home: React.FC<HomeProps> = ({ }) => {
     const [activeIndex, setActiveIndex] = useState(0);
@@ -72,7 +71,6 @@ const Home: React.FC<HomeProps> = ({ }) => {
                 <div className="max-w-lg">
                     <h1 className="title"><span className="text-sky-300">|</span> PonQ <span className="text-sky-300">|</span> </h1>
                     <div className="flex flex-col gap-4">
-
                         <button className={(activeIndex === 0 ? "active" : "") + " kave-btn"}>
                             <span className="kave-line"></span>
                             Start game!

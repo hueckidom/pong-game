@@ -54,3 +54,15 @@ export interface Question {
     D: string;
     answer: string;
 }
+
+export interface BaseSettings{
+    baseVelocityX: number;
+    baseVelocityY: number;
+    maxLife: number;
+    maxVelocityX: number;
+    moveSpeed: number;
+    playerWidth: number;
+    playerHeight: number;
+    boardHeightDivisor: number;
+    maxBoardWidth: number;
+}

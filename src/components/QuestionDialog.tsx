@@ -66,10 +66,10 @@ const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
             <div className="hero-content text-left flex-col">
                 <div className="text-xl font-bold">{question?.question}</div>
                 <div className="flex flex-col gap-2">
-                    <div className={`kbd w-full ${activeIndex === 0 ? 'bg-primary' : ''}`}>{question?.A}</div>
-                    <div className={`kbd ${activeIndex === 1 ? 'bg-primary' : ''}`}>{question?.B}</div>
-                    <div className={`kbd ${activeIndex === 2 ? 'bg-primary' : ''}`}>{question?.C}</div>
-                    <div className={`kbd ${activeIndex === 3 ? 'bg-primary' : ''}`}>{question?.D}</div>
+                    <div className={`kbd w-full text-lg ${activeIndex === 0 ? 'bg-primary' : ''}`}>{question?.A}</div>
+                    <div className={`kbd text-lg ${activeIndex === 1 ? 'bg-primary' : ''}`}>{question?.B}</div>
+                    <div className={`kbd text-lg ${activeIndex === 2 ? 'bg-primary' : ''}`}>{question?.C}</div>
+                    <div className={`kbd text-lg ${activeIndex === 3 ? 'bg-primary' : ''}`}>{question?.D}</div>
                 </div>
             </div>
         </div>
