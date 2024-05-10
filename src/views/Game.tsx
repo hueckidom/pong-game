@@ -31,7 +31,7 @@ export let gameDefaults: BaseSettings = {
     baseVelocityY: 1.2,
     boardHeightDivisor: 1.7,
     maxBoardWidth: 700,
-    maxLife: 5,
+    maxLife: 2,
     maxVelocityX: 5,
     moveSpeed: 4.5,
     playerHeight: 60,
