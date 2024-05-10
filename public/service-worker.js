@@ -1,6 +1,8 @@
+const CACHE_NAME = 'v1';
+
 self.addEventListener('install', function (event) {
   event.waitUntil(
-    caches.open('v1').then(function (cache) {
+    caches.open(CACHE_NAME).then(function (cache) {
       return cache.addAll([
         '/',
         '/index.html',
@@ -11,24 +13,42 @@ self.addEventListener('install', function (event) {
         '/logo512.png',
         '/manifest.json',
         '/vite.svg',
-        '/assets/button-click-sound.mp3',
-        '/assets/correct.mp3',
-        '/assets/game.mp3',
-        '/assets/goal.mp3',
-        '/assets/Paddle Ball Hit Sound Effect HD.mp3',
-        '/assets/questions.mp3',
-        '/assets/wrong.mp3',
-        '/assets/correct.mp3',
-        '/assets/valuehero.png'
+        '/button-click-sound.mp3',
+        '/correct.mp3',
+        '/game.mp3',
+        '/goal.mp3',
+        '/Paddle Ball Hit Sound Effect HD.mp3',
+        '/questions.mp3',
+        '/wrong.mp3',
+        '/correct.mp3',
+        '/valuehero.png'
       ]);
     })
   );
 });
 
-self.addEventListener('fetch', function (event) {
+self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request).then(function (response) {
-      return response || fetch(event.request);
+    caches.match(event.request)
+      .then(response => {
+        if (response) {
+          return response;
+        }
+        return fetch(event.request).catch(() => caches.match('/offline.html'));
+      })
+  );
+});
+self.addEventListener('activate', event => {
+  const cacheWhitelist = [CACHE_NAME];
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheWhitelist.indexOf(cacheName) === -1) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
     })
   );
 });
