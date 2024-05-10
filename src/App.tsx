@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import { useEffect, useState } from "react";
 import GameField, { assignGameDefaults } from "./views/Game";
 import Home from "./views/Home";
@@ -18,15 +18,15 @@ const App = () => {
             assignGameDefaults(JSON.parse(defaults));
         }
     }, []);
-    
+
     return (
         <Router>
             <Routes>
-                <Route index path="/" element={<Home />} />
-                <Route index path="/game" element={<GameField settings={settings} />} />
-                <Route index path="/enter-score" element={<Highscore />} />
-                <Route index path="/scores" element={<ShowScores />} />
-                <Route index path="/settings" element={<Settings />} />
+                <Route path="/" element={<Home />} />
+                <Route path="/game" element={<GameField settings={settings} />} />
+                <Route path="/enter-score" element={<Highscore />} />
+                <Route path="/scores" element={<ShowScores />} />
+                <Route path="/settings" element={<Settings />} />
             </Routes>
         </Router>
     );

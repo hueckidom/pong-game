@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { getScores, saveScore } from "../utils/scores";
 
 const EnterScore: React.FC = () => {
@@ -9,6 +9,7 @@ const EnterScore: React.FC = () => {
     const [score, setScore] = useState<number>(0);
     const currentScores = getScores();
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         const handleKeyPress = (event: KeyboardEvent) => {
@@ -40,11 +41,10 @@ const EnterScore: React.FC = () => {
 
         window.addEventListener('keydown', handleKeyPress);
 
-        // get score from params
-        const urlParams = new URLSearchParams(window.location.search);
-        const scoreParam = urlParams.get('score');
+        const query = new URLSearchParams(location.search);
+        const scoreParam = query.get('score');
         if (scoreParam) {
-            setScore(parseInt(scoreParam));
+            setScore(parseInt(scoreParam, 10));
         }
 
         return () => {
