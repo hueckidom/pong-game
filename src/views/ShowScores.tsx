@@ -49,7 +49,7 @@ const ShowScores: React.FC = () => {
                                 <th>Score</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="text-xl">
                             {highscores.map((score, index) => (
                                 <tr key={index}>
                                     <td>{index + 1}</td>

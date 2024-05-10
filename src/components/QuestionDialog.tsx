@@ -9,6 +9,8 @@ const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
 }) => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [question, setQuestion] = useState<Question | undefined>(undefined);
+    const [timer, setTimer] = useState(15);
+    let timeout: any;
 
     useEffect(() => {
         const questionToCategory = questions.filter((q) => q.category == value);
@@ -17,6 +19,21 @@ const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
         const randomQuestion: Question = allQuestions[Math.floor(Math.random() * allQuestions.length)];
         setQuestion(randomQuestion);
     }, []);
+
+    useEffect(() => {
+        if (timer > 0) {
+            timeout = setTimeout(() => setTimer(timer - 1), 1000);
+            return () => clearTimeout(timeout);
+        } else {
+            wrong();
+        }
+
+        return () => {
+            if (timeout) {
+                clearTimeout(timeout);
+            }
+        };
+    }, [timer]);
 
     const indexToAlpha = (index: number): string => {
         switch (index) {
@@ -34,9 +51,7 @@ const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
     };
 
     const handleSpace = () => {
-        console.log("activeIndex: ", activeIndex);
         const answerToIndex = indexToAlpha(activeIndex);
-        console.log("---", answerToIndex, "--- ANTOWRT: ", question?.answer);
         if (answerToIndex == question?.answer) {
             correct();
         } else {
@@ -74,6 +89,11 @@ const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
     return (
         <div className="hero min-h-screen bg-base-300 fixed z-20 top-0 opacity-95 backdrop-blur-md">
             <div className="hero-content text-left flex-col px-4">
+                <div className="title-wrapper mb-8 floating">
+                    <h1 className="sweet-title sweet-title-mixed game-title">
+                        <span data-text={timer}>{timer}</span>
+                    </h1>
+                </div>
                 <div className="text-xl font-bold">{question?.question}</div>
                 <div className="flex flex-col gap-2">
                     <div className={`kbd w-full text-lg ${activeIndex === 0 ? 'bg-primary' : ''}`}>{question?.A}</div>

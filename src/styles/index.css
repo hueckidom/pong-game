@@ -11,24 +11,35 @@ html{
     width: 100%;
     --fs: clamp(2rem, 7vw, 6rem);
     --ls: clamp(-1.75px, -0.25vw, -3.5px);
+    --glowColor: rgb(0 205 252);
+    --glowColorblue: rgb(55, 0, 255);
+    --glowColorYellow: rgb(252, 244, 0);
+    --glowColorpurp0le:rgb(147, 0, 252);
 }
 
 #board {
-    border: 5px solid #1fd8ff;
+    border: 5px solid var(--glowColor);
     border-radius: 10px;
-    box-shadow: 1px 1px 20px 4px rgb(0 205 252);
+    box-shadow: 1px 1px 20px 4px ;
     animation:  glow 5s infinite;
 }
 
 @keyframes glow {
     0% {
-        box-shadow: 1px 1px 20px 4px rgb(0 205 252);
+        box-shadow: 1px 1px 20px 4px var(--glowColor);
+        border: 5px solid var(--glowColor);
+    }
+    25% {
+        box-shadow: 1px 1px 40px 10px var(--glowColorYellow);
+        border: 5px solid var(--glowColorYellow);
     }
     50% {
-        box-shadow: 1px 1px 40px 10px rgb(59 237 255);
+      box-shadow: 1px 1px 40px 10px var(--glowColorpurp0le);
+      border: 5px solid var(--glowColorpurp0le);
     }
     100% {
-        box-shadow: 1px 1px 20px 4px rgb(0 205 252);
+        box-shadow: 1px 1px 20px 4px var(--glowColor);
+        border: 5px solid var(--glowColor);
     }
 }
 
@@ -217,7 +228,7 @@ body {
   
   .sweet-title {
     order: 2;
-    color: #1dd9ff;
+    color: #281dff;
     font-weight: 900;
     text-transform: uppercase;
     font-size: clamp(3rem, 10vw, 6rem);
@@ -251,12 +262,70 @@ body {
     }
   }
 
+  .sweet-title-blue{
+    color: #281dff;
+    text-shadow: 3px 1px 1px #4af7ff, 2px 2px 1px #165bfb, 4px 2px 1px #4af7ff,
+      3px 3px 1px #165bfb, 5px 3px 1px #4af7ff, 4px 4px 1px #165bfb,
+      6px 4px 1px #4af7ff, 5px 5px 1px #165bfb, 7px 5px 1px #4af7ff,
+      6px 6px 1px #165bfb, 8px 6px 1px #4af7ff, 7px 7px 1px #165bfb,
+      9px 7px 1px #4af7ff;
+
+      span:before {
+        text-shadow: 2px 2px 1px #4a67e9, -1px -1px 1px #6a36f9,
+          -2px 2px 1px #4a4de9, 1px -1px 1px #4336f9;
+      }
+  }
+
+  .sweet-title-yellow{
+    color: #f7ff4a;
+    text-shadow: 3px 1px 1px #4af7ff, 2px 2px 1px #165bfb, 4px 2px 1px #4af7ff,
+      3px 3px 1px #165bfb, 5px 3px 1px #4af7ff, 4px 4px 1px #165bfb,
+      6px 4px 1px #4af7ff, 5px 5px 1px #165bfb, 7px 5px 1px #4af7ff,
+      6px 6px 1px #165bfb, 8px 6px 1px #4af7ff, 7px 7px 1px #165bfb,
+      9px 7px 1px #4af7ff;
+
+    span:before {
+      text-shadow: 2px 2px 1px #f7ff4a, -1px -1px 1px #f9f936,
+          -2px 2px 1px #d8e212, 1px -1px 1px #f9f936;
+    }
+  }
+
+  .sweet-title-purple{
+    color: #6a36f9;
+    text-shadow: 3px 1px 1px #4af7ff, 2px 2px 1px #165bfb, 4px 2px 1px #4af7ff,
+    3px 3px 1px #165bfb, 5px 3px 1px #4af7ff, 4px 4px 1px #165bfb,
+    6px 4px 1px #4af7ff, 5px 5px 1px #165bfb, 7px 5px 1px #4af7ff,
+    6px 6px 1px #165bfb, 8px 6px 1px #4af7ff, 7px 7px 1px #165bfb,
+    9px 7px 1px #4af7ff;
+    span:before {
+      text-shadow: 2px 2px 1px #c34aff, -1px -1px 1px #d536f9,
+          -2px 2px 1px #b512e2, 1px -1px 1px #e236f9;
+    }
+  }
+
+  .sweet-title-mixed{
+    color:#f7ff4a;
+    background: -webkit-linear-gradient(#eee, #333);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 3px 1px 1px #4af7ff, 2px 2px 1px #165bfb, 4px 2px 1px #5f4aff,
+      3px 3px 1px #165bfb, 5px 3px 1px #4af7ff, 4px 4px 1px #165bfb,
+      6px 4px 1px #4af7ff, 5px 5px 1px #165bfb, 7px 5px 1px #4af7ff,
+      6px 6px 1px #165bfb, 8px 6px 1px #4af7ff, 7px 7px 1px #165bfb,
+      9px 7px 1px #4af7ff;
+    span:before {
+      text-shadow: 2px 2px 1px #eaff2c, -1px -1px 1px #3646f9,
+          -2px 2px 1px #b512e2, 1px -1px 1px #e236f9;
+    }
+
+  }
+
   .game-wrapper {
-    transform: skew(0, 360deg);
+    transform: skew(0, 365deg);
   }
 
   .game-title {
-    font-size: 23px;
+    font-size: 35px;
   }
   
 
@@ -270,7 +339,7 @@ body {
       
     }
     50% {
-      transform: translateY(-15px) skew(0, 358deg);
+      transform: translateY(-25px) skew(0, 358deg);
     }
     100% {
       transform: translateY(0px) skew(0, 352deg);

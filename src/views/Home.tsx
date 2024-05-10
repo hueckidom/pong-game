@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import backgroundMusic from "../assets/game.mp3";
 import valuehero from "../assets/valuehero.png";
 import AudioComponent from "../components/Audio";
+import QuestionDialogCmp from "../components/QuestionDialog";
 
 const Home: React.FC<HomeProps> = ({ }) => {
     const [activeIndex, setActiveIndex] = useState(0);
@@ -66,16 +67,16 @@ const Home: React.FC<HomeProps> = ({ }) => {
         };
     }, [activeIndex]);
 
-    return (
+    return (<>
+        <div className="fixed w-full hero-img bottom-0 right-0">
+            <img className="w-2/4 max-w-96 opacity-25" src={valuehero} />
+        </div>
         <div className="hero min-h-screen bg-base-200">
             <div className="hero-content text-center">
                 <div className="">
-                    <div className="absolute w-full hero-img">
-                        <img className="w-2/4 max-w-72 m-auto" src={valuehero} />
-                    </div>
 
                     <div className="title-wrapper mb-8 floating">
-                        <h1 className="sweet-title">
+                        <h1 className="sweet-title sweet-title-mixed">
                             <span data-text="#ValueHero">#ValueHero</span>
                         </h1>
                     </div>
@@ -100,6 +101,7 @@ const Home: React.FC<HomeProps> = ({ }) => {
                 volume={0.005}
             />
         </div >
+    </>
     );
 };
 
