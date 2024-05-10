@@ -471,7 +471,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
             {/* Values */}
             <div className="my-8 text-md flex gap-2 justify-center align-middle">
                 <span className="opacity-75">Ihr haltet gerade gemeinsam den Wert</span>
-                <div className="title-wrapper game-wrapper">
+                <div className="title-wrapper game-wrapper floating">
                     <h1 className="sweet-title game-title">
                         <span data-text={currentValue}>{currentValue}</span>
                     </h1>

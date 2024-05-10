@@ -259,3 +259,20 @@ body {
     font-size: 23px;
   }
   
+
+  .floating {
+    animation: floating 6s infinite;
+  }
+
+  @keyframes floating {
+    0% {
+      transform: translateY(0px) skew(0, 352deg);
+      
+    }
+    50% {
+      transform: translateY(-15px) skew(0, 358deg);
+    }
+    100% {
+      transform: translateY(0px) skew(0, 352deg);
+    }
+  }

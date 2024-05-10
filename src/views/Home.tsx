@@ -74,7 +74,7 @@ const Home: React.FC<HomeProps> = ({ }) => {
                         <img className="w-2/4 max-w-72 m-auto" src={valuehero} />
                     </div>
 
-                    <div className="title-wrapper mb-8">
+                    <div className="title-wrapper mb-8 floating">
                         <h1 className="sweet-title">
                             <span data-text="#ValueHero">#ValueHero</span>
                         </h1>
