@@ -92,25 +92,25 @@ const EnterScore: React.FC = () => {
     return (
         <div className="hero min-h-screen bg-base-200">
             <div className="hero-content text-left flex-col">
-                <div className="text-4xl ">Your score: {score}</div>
-                <div>
-                    <div className="flex gap-2">
-                        <span>Your team name: </span>
+                <div className="text-4xl ">Euer score: {score}</div>
+                <div className="text-center">
+                    <div className="flex gap-2 justify-center">
+                        <span>Euer Team Name: </span>
                         <div>{teamName}<span className="blink-ani ml-1">{currentLetter}</span></div>
 
                     </div>
                     <div>
-                        <div className={"p-4 text-center flex gap-2"}>
+                        <div className={"p-4 text-center flex gap-2 justify-center"}>
                             <kbd className="p-2">◀︎</kbd>
                             <span className={(activeIndex === 0 ? "bg-primary" : "") + " kbd"}>{currentLetter}</span>
                             <kbd className="p-2">▶︎</kbd>
                         </div>
                         <div className="flex gap-4 p-4">
                             <div className={"p-2 kbd " + (activeIndex === 1 ? "bg-primary" : "")} onClick={removeLastLetter}>
-                                Del
+                                Löschen
                             </div>
                             <div className={(activeIndex === 2 ? "bg-primary" : "") + " kbd"} onClick={confirmName}>
-                                Submit
+                                Bestätigen
                             </div>
                         </div>
                     </div>

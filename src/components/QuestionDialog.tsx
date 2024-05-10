@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { AudioComponentProps, Question, QuestionDialogProps } from "../utils/types";
+import { Question, QuestionDialogProps } from "../utils/types";
 import questions from "../assets/questions.json";
 
 const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
+    value,
     correct,
     wrong,
 }) => {
@@ -10,7 +11,10 @@ const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
     const [question, setQuestion] = useState<Question | undefined>(undefined);
 
     useEffect(() => {
-        const randomQuestion: Question = questions[Math.floor(Math.random() * questions.length)];
+        const questionToCategory = questions.filter((q) => q.category == value);
+        const randoms = questions.filter((o) => o.category === "random");
+        const allQuestions = [...questionToCategory, ...randoms];
+        const randomQuestion: Question = allQuestions[Math.floor(Math.random() * allQuestions.length)];
         setQuestion(randomQuestion);
     }, []);
 
@@ -69,7 +73,7 @@ const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
 
     return (
         <div className="hero min-h-screen bg-base-300 fixed z-20 top-0 opacity-95 backdrop-blur-md">
-            <div className="hero-content text-left flex-col">
+            <div className="hero-content text-left flex-col px-4">
                 <div className="text-xl font-bold">{question?.question}</div>
                 <div className="flex flex-col gap-2">
                     <div className={`kbd w-full text-lg ${activeIndex === 0 ? 'bg-primary' : ''}`}>{question?.A}</div>

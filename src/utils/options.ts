@@ -18,4 +18,6 @@ const timeToSpeed = (seconds: number) => {
   return speedOptions["sonic"];
 }
 
+export type values = "Verbundenheit" | "Vertrauen" | "Bodenständigkeit" | "Respekt" | "Leistung";
+
 export { speedOptions, timeToSpeed };

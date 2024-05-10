@@ -2,6 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import correctSound from "../assets/correct.mp3";
 import questionSound from "../assets/questions.mp3";
 import wrongSound from "../assets/wrong.mp3";
+import bubblePicture from "../assets/ball.png";
+import BodenStaendigkeitBallImg from "../assets/b.png";
+import LeistungBallImg from "../assets/l.png";
+import RespektBallImg from "../assets/r.png";
+import VerbundenheitBallImg from "../assets/vbh.png";
+import Vertrauen from "../assets/v.png";
 import {
     BaseSettings,
     MultiplePlayerModeProps,
@@ -15,6 +21,7 @@ import AudioComponent from "../components/Audio";
 import backgroundMusic from "../assets/game.mp3";
 import { determineBoardWidth } from "../utils/board";
 import QuestionDialogCmp from "../components/QuestionDialog";
+import { values } from "../utils/options";
 
 let isPlaying1 = false;
 let bubble: any = null;
@@ -24,7 +31,7 @@ export let gameDefaults: BaseSettings = {
     baseVelocityY: 1.2,
     boardHeightDivisor: 1.7,
     maxBoardWidth: 700,
-    maxLife: 3,
+    maxLife: 5,
     maxVelocityX: 5,
     moveSpeed: 4.5,
     playerHeight: 60,
@@ -51,6 +58,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
     let moveSpeed = gameDefaults.moveSpeed;
     let maxVelocity = gameDefaults.maxVelocityX;
     let maxLife = gameDefaults.maxLife;
+    let valueQue: values[] = ["Vertrauen", "Bodenständigkeit", "Leistung", "Respekt", "Verbundenheit"];
 
     let player1: player = {
         x: 2,
@@ -69,8 +77,8 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
         velocityY: playerVelocityY,
         stopPlayer: false,
     };
-    const ballWidth = 10;
-    const ballHeight = 10;
+    const ballWidth = 32;
+    const ballHeight = 32;
 
     let ball: ball = {
         x: boardWidth / 2,
@@ -81,6 +89,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
         velocityY: gameDefaults.baseVelocityY,
     };
 
+    const [currentValue, setCurrentValue] = useState<values>(valueQue[0]);
     const [playHit, setPlayHit] = useState<boolean>(false);
     const [playGoal, setPlayGoal] = useState<boolean>(false);
     const [isPaused, setIsPaused] = useState<boolean>(false);
@@ -144,12 +153,20 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
         setTimeout(spawnBubble, spawnInterval);
     };
 
+    const nextValue = () => {
+        //+1 to get the next index if we reach the end of the array we start from the beginning
+        const currentIndex = valueQue.indexOf(currentValue);
+        const nextIndex = (currentIndex + 1) % valueQue.length;
+        setCurrentValue(valueQue[nextIndex]);
+    }
+
     const handleCorrectAnswer = () => {
         const audio = new Audio(correctSound);
         audio.play();
         score.current += timeRef.current;
+        nextValue();
         setIsQuestion(false);
-        
+
         setTimeout(() => {
             triggerPause();
             bubble = null;
@@ -161,6 +178,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
         const audio = new Audio(wrongSound);
         audio.play();
         setIsQuestion(false);
+        nextValue();
         setLife((prevLife) => prevLife - 1);
 
         setTimeout(() => {
@@ -170,17 +188,26 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
         }, 250);
     }
 
+    const determineBallPicture = (value: values) => {
+        switch (value) {
+            case "Bodenständigkeit":
+                return BodenStaendigkeitBallImg;
+            case "Leistung":
+                return LeistungBallImg;
+            case "Respekt":
+                return RespektBallImg;
+            case "Verbundenheit":
+                return VerbundenheitBallImg;
+            case "Vertrauen":
+                return Vertrauen;
+        }
+    }
+
     const drawBubble = () => {
         if (!bubble) return;
-
-        context.beginPath();
-        context.arc(bubble.x, bubble.y, bubble.radius, 0, Math.PI * 2);
-        context.fillStyle = '#fff';
-        context.fill();
-        context.font = '13px Arial';
-        context.fillStyle = '#000';
-        context.textAlign = 'center';
-        context.fillText('?', bubble.x, bubble.y + 6);
+        const bubbleimage = new Image();
+        bubbleimage.src = bubblePicture;
+        context.drawImage(bubbleimage, bubble.x - bubble.radius, bubble.y - bubble.radius, bubble.radius * 2, bubble.radius * 2);
     };
 
     const spawnBubble = () => {
@@ -189,8 +216,8 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
         bubble = {
             x: boardWidth / 2,
             y: Math.random() * boardHeight / 1.5 + 20,
-            radius: 13,
-            velocityX: (Math.random() - 1.5) * 2.5,
+            radius: 26,
+            velocityX: (Math.random() - 1.25) * 2,
             velocityY: 1.2
         };
     };
@@ -282,8 +309,10 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
             ball.x += ball.velocityX;
             ball.y += ball.velocityY;
             // recreating the ball
-            context.fillRect(ball.x, ball.y, ball.width, ball.height);
 
+            const ballImg = new Image();
+            ballImg.src = determineBallPicture(currentValue);
+            context.drawImage(ballImg, ball.x, ball.y, ball.width, ball.height);
 
             // question bubble
             checkBubbleCollision(player1);
@@ -437,10 +466,23 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
     }, []);
 
     return (
-        <section className="flex-1 text-center">
-
-            <div className="stats shadow-xl bg-base-200 p-2">
-
+        <section className="flex-1 text-center fixed w-full h-full flex justify-center align-middle items-center left-0 top-0 flex-col">
+            {/* Values */}
+            <div className="my-8 text-md flex gap-2 justify-center align-middle">
+                <span className="opacity-75">Ihr haltet gerade gemeinsam den Wert</span>
+                <div className="title-wrapper game-wrapper">
+                    <h1 className="sweet-title game-title">
+                        <span data-text={currentValue}>{currentValue}</span>
+                    </h1>
+                </div>
+                <span className="opacity-75">hoch!</span>
+            </div>
+            {/* Game board  */}
+            <div className="gradient-border">
+                <canvas className="bg-base-300 mt-10 m-auto shadow-lg " id="board"></canvas>
+            </div>
+            {/* Score */}
+            <div className="stats shadow-xl bg-base-200 p-2 mt-8">
                 <div className="stat place-items-center">
                     <div className="stat-title">Timer</div>
                     <div className="stat-value opacity-75">{timer}s</div>
@@ -461,14 +503,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
                     <div className="stat-title">Life</div>
                     <div className="stat-value opacity-75">{life}</div>
                 </div>
-
             </div>
-
-            {/* Game board  */}
-            <div className="gradient-border">
-                <canvas className="bg-base-300 mt-10 m-auto shadow-lg " id="board"></canvas>
-            </div>
-
             {/* Audio */}
             {playHit && (
                 <AudioComponent
@@ -493,7 +528,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
             )}
 
             {isQuestion && (
-                <QuestionDialogCmp correct={handleCorrectAnswer} wrong={handleWrongAnswer} />
+                <QuestionDialogCmp correct={handleCorrectAnswer} wrong={handleWrongAnswer} value={currentValue} />
             )}
 
             {isPaused && (

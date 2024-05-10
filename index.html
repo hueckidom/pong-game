@@ -1,16 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <link rel="icon" type="image/svg+xml" href="./src/assets/ping-pong.png" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>PONQ</title>
-    </head>
-    <body>
-        <div id="root"></div>
-        <div class="space stars1"></div>
-        <div class="space stars2"></div>
-        <div class="space stars3"></div>
-        <script type="module" src="/src/main.tsx"></script>
-    </body>
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon"
+          type="image/svg+xml"
+          href="./src/assets/valuehero.png" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+    <title>#VALUEHERO</title>
+</head>
+
+<body>
+    <div id="root"></div>
+    <div class="space stars1"></div>
+    <div class="space stars2"></div>
+    <div class="space stars3"></div>
+    <script type="module"
+            src="/src/main.tsx"></script>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then((registration) => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
+</body>
+
 </html>

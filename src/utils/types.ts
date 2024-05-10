@@ -1,3 +1,5 @@
+import { values } from "./options";
+
 export type player = {
     x: number;
     y: number;
@@ -23,6 +25,7 @@ export interface AudioComponentProps {
 }
 
 export interface QuestionDialogProps {
+    value: values;
     correct: () => void;
     wrong: () => void;
 }
@@ -55,7 +58,7 @@ export interface Question {
     answer: string;
 }
 
-export interface BaseSettings{
+export interface BaseSettings {
     baseVelocityX: number;
     baseVelocityY: number;
     maxLife: number;

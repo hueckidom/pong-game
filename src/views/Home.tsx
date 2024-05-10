@@ -3,6 +3,7 @@ import { HomeProps } from "../utils/types";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import backgroundMusic from "../assets/game.mp3";
+import valuehero from "../assets/valuehero.png";
 import AudioComponent from "../components/Audio";
 
 const Home: React.FC<HomeProps> = ({ }) => {
@@ -68,12 +69,22 @@ const Home: React.FC<HomeProps> = ({ }) => {
     return (
         <div className="hero min-h-screen bg-base-200">
             <div className="hero-content text-center">
-                <div className="max-w-lg">
-                    <h1 className="title"><span className="text-sky-300">|</span> PonQ <span className="text-sky-300">|</span> </h1>
+                <div className="">
+                    <div className="absolute w-full hero-img">
+                        <img className="w-2/4 max-w-72 m-auto" src={valuehero} />
+                    </div>
+
+                    <div className="title-wrapper mb-8">
+                        <h1 className="sweet-title">
+                            <span data-text="#ValueHero">#ValueHero</span>
+                        </h1>
+                    </div>
+
+
                     <div className="flex flex-col gap-4">
                         <button className={(activeIndex === 0 ? "active" : "") + " kave-btn"}>
                             <span className="kave-line"></span>
-                            Start game!
+                            Starten!
                         </button>
 
                         <button className={(activeIndex === 1 ? "active" : "") + " kave-btn"}>
@@ -88,7 +99,7 @@ const Home: React.FC<HomeProps> = ({ }) => {
                 path={backgroundMusic}
                 volume={0.005}
             />
-        </div>
+        </div >
     );
 };
 

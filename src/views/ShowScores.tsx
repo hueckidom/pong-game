@@ -33,7 +33,13 @@ const ShowScores: React.FC = () => {
     return (
         <div className="hero min-h-screen bg-base-200">
             <div className="hero-content text-left flex-col bg-base-300 p-4 rounded-lg min-w-96">
-                <div className="text-xl font-bold">- Top 10 -</div>
+
+                <div className="title-wrapper mb-12">
+                    <h1 className="sweet-title">
+                        <span data-text="Top-Heros">Top-Heros</span>
+                    </h1>
+                </div>
+
                 <div className="overflow-x-auto w-full">
                     <table className="table w-full">
                         <thead>

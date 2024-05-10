@@ -1,498 +1,137 @@
 [
     {
-        "question": "Was bedeutet eine blinkende rote Ampel für einen Fahrer?",
-        "A": "Anhalten",
-        "B": "Beschleunigen",
-        "C": "Mit Vorsicht weiterfahren",
-        "D": "Hupen",
-        "answer": "A"
+        "question": "Welcher Wert fehlt? Leistung, Respekt, Vertrauen, Bodenständigkeit und …?",
+        "A": "Verbundenheit",
+        "B": "Freiheit",
+        "C": "Zusammenhalt",
+        "D": "Innovation",
+        "answer": "A",
+        "category": "Verbundenheit"
     },
     {
-        "question": "Was ist die Hauptstadt von Deutschland?",
-        "A": "Berlin",
-        "B": "Hamburg",
-        "C": "München",
-        "D": "Frankfurt",
-        "answer": "A"
+        "question": "Welcher Wert fehlt? Respekt, Vertrauen, Bodenständigkeit, Verbundenheit und …?",
+        "A": "Leistung",
+        "B": "Transparenz",
+        "C": "Vielfalt",
+        "D": "Kooperation",
+        "answer": "A",
+        "category": "Leistung"
     },
     {
-        "question": "Wer schrieb 'Romeo und Julia'?",
-        "A": "William Shakespeare",
-        "B": "Jane Austen",
-        "C": "Charles Dickens",
-        "D": "Mark Twain",
-        "answer": "A"
+        "question": "Welcher Wert fehlt? Vertrauen, Bodenständigkeit, Verbundenheit, Leistung und …?",
+        "A": "Respekt",
+        "B": "Ehrlichkeit",
+        "C": "Effizienz",
+        "D": "Engagement",
+        "answer": "A",
+        "category": "Respekt"
     },
     {
-        "question": "Welcher Planet ist der dritte in unserem Sonnensystem?",
-        "A": "Erde",
-        "B": "Mars",
-        "C": "Venus",
-        "D": "Jupiter",
-        "answer": "A"
+        "question": "Welcher Wert fehlt? Bodenständigkeit, Verbundenheit, Leistung, Respekt und …?",
+        "A": "Vertrauen",
+        "B": "Flexibilität",
+        "C": "Stabilität",
+        "D": "Glaubwürdigkeit",
+        "answer": "A",
+        "category": "Vertrauen"
     },
     {
-        "question": "Was ist die Hauptzutat in einem Omelett?",
-        "A": "Eier",
-        "B": "Kartoffeln",
-        "C": "Käse",
-        "D": "Schinken",
-        "answer": "A"
+        "question": "Welcher Wert fehlt? Verbundenheit, Leistung, Respekt, Vertrauen und …?",
+        "A": "Bodenständigkeit",
+        "B": "Professionalität",
+        "C": "Klarheit",
+        "D": "Pünktlichkeit",
+        "answer": "A",
+        "category": "Bodenständigkeit"
     },
     {
-        "question": "Wer malte die Mona Lisa?",
-        "A": "Leonardo da Vinci",
-        "B": "Vincent van Gogh",
-        "C": "Pablo Picasso",
-        "D": "Michelangelo",
-        "answer": "A"
+        "question": "Dieser Wert symbolisiert Zusammenhalt und Loyalität. Er beschreibt, dass ein „Wir“ stärker ist als viele „Ichs“.",
+        "A": "Verbundenheit",
+        "B": "Engagement",
+        "C": "Solidarität",
+        "D": "Integrität",
+        "answer": "A",
+        "category": "Verbundenheit"
     },
     {
-        "question": "Welches Land wird als 'das Land der aufgehenden Sonne' bezeichnet?",
-        "A": "Japan",
-        "B": "China",
-        "C": "Indien",
-        "D": "Ägypten",
-        "answer": "A"
+        "question": "Dieser Wert ist Kern unseres Handels. Er impliziert, dass wir uns persönlich und als Team anspruchsvolle Ziele setzen.",
+        "A": "Leistung",
+        "B": "Beständigkeit",
+        "C": "Effizienz",
+        "D": "Kreativität",
+        "answer": "A",
+        "category": "Leistung"
     },
     {
-        "question": "Was ist die Hauptfarbe der amerikanischen Flagge?",
-        "A": "Rot",
-        "B": "Blau",
-        "C": "Weiß",
-        "D": "Gelb",
-        "answer": "A"
+        "question": "Dieser Wert basiert darauf, dass wir miteinander und nicht übereinander sprechen. Zudem setzen wir uns für gleiche Chancen ein.",
+        "A": "Respekt",
+        "B": "Fairness",
+        "C": "Offenheit",
+        "D": "Akzeptanz",
+        "answer": "A",
+        "category": "Respekt"
     },
     {
-        "question": "Was ist die Hauptzutat in Guacamole?",
-        "A": "Avocado",
-        "B": "Tomate",
-        "C": "Zitrone",
-        "D": "Knoblauch",
-        "answer": "A"
+        "question": "Dieser Wert ist ein wesentlicher Grundpfeiler unseres Erfolgs und unserer Stabilität. Er erinnert uns daran, wie wichtig es ist, einander auf Augenhöhe zu begegnen.",
+        "A": "Bodenständigkeit",
+        "B": "Authentizität",
+        "C": "Resilienz",
+        "D": "Würde",
+        "answer": "A",
+        "category": "Bodenständigkeit"
     },
     {
-        "question": "Welches Tier ist das größte auf der Erde?",
-        "A": "Blauwal",
-        "B": "Elefant",
-        "C": "Giraffe",
-        "D": "Braunbär",
-        "answer": "A"
+        "question": "Dieser Wert unterstreicht, dass wir einander und aneinander glauben. Dabei ist unsere Kommunikation offen sowie ehrlich und wir können uns aufeinander verlassen.",
+        "A": "Vertrauen",
+        "B": "Zuverlässigkeit",
+        "C": "Transparenz",
+        "D": "Loyalität",
+        "answer": "A",
+        "category": "Vertrauen"
     },
     {
-        "question": "Welches Element hat das chemische Symbol 'H'?",
-        "A": "Wasserstoff",
-        "B": "Helium",
-        "C": "Kohlenstoff",
-        "D": "Sauerstoff",
-        "answer": "A"
+        "question": "Welcher Wert ist nicht Teil unserer Werteblüte?",
+        "A": "Begeisterung",
+        "B": "Leistung",
+        "C": "Respekt",
+        "D": "Lebhaftigkeit",
+        "answer": "A",
+        "category": "Random"
     },
     {
-        "question": "Wer schrieb 'Die Odyssee'?",
-        "A": "Homer",
-        "B": "Virgil",
-        "C": "Herodot",
-        "D": "Plato",
-        "answer": "A"
+        "question": "Welcher Wert ist nicht Teil unserer Werteblüte?",
+        "A": "Respekt",
+        "B": "Ehrlichkeit",
+        "C": "Bodenständigkeit",
+        "D": "Enkelfähigkeit",
+        "answer": "A",
+        "category": "Random"
     },
     {
-        "question": "Was ist die Hauptzutat in Sushi?",
-        "A": "Reis",
-        "B": "Fisch",
-        "C": "Algen",
-        "D": "Gemüse",
-        "answer": "A"
+        "question": "Welcher Wert ist nicht Teil unserer Werteblüte?",
+        "A": "Vertrauen",
+        "B": "Gemeinsamkeit",
+        "C": "Zusammenhalt",
+        "D": "Leistung",
+        "answer": "A",
+        "category": "Random"
     },
     {
-        "question": "Welcher Kontinent ist der größte?",
-        "A": "Asien",
-        "B": "Afrika",
-        "C": "Nordamerika",
-        "D": "Südamerika",
-        "answer": "A"
+        "question": "Welcher Wert ist nicht Teil unserer Werteblüte?",
+        "A": "Entschlossenheit",
+        "B": "Verbundenheit",
+        "C": "Respekt",
+        "D": "Vertrauen ",
+        "answer": "A",
+        "category": "Random"
     },
     {
-        "question": "Welches Land hat die meisten Einwohner?",
-        "A": "China",
-        "B": "Indien",
-        "C": "USA",
-        "D": "Russland",
-        "answer": "A"
-    },
-    {
-        "question": "Was ist die Hauptstadt von Frankreich?",
-        "A": "Paris",
-        "B": "Rom",
-        "C": "Berlin",
-        "D": "London",
-        "answer": "A"
-    },
-    {
-        "question": "Wer malte 'Die Sternennacht'?",
-        "A": "Vincent van Gogh",
-        "B": "Pablo Picasso",
-        "C": "Leonardo da Vinci",
-        "D": "Claude Monet",
-        "answer": "A"
-    },
-    {
-        "question": "Was ist die Hauptzutat in einer Margherita-Pizza?",
-        "A": "Tomaten",
-        "B": "Käse",
-        "C": "Pilze",
-        "D": "Schinken",
-        "answer": "A"
-    },
-    {
-        "question": "Wer war der erste Mensch im Weltraum?",
-        "A": "Juri Gagarin",
-        "B": "Neil Armstrong",
-        "C": "Buzz Aldrin",
-        "D": "John Glenn",
-        "answer": "A"
-    },
-    {
-        "question": "Was ist die Hauptstadt von Australien?",
-        "A": "Canberra",
-        "B": "Sydney",
-        "C": "Melbourne",
-        "D": "Perth",
-        "answer": "A"
-    },
-    {
-        "question": "Wer erfand die Glühbirne?",
-        "A": "Thomas Edison",
-        "B": "Nikola Tesla",
-        "C": "Alexander Graham Bell",
-        "D": "Albert Einstein",
-        "answer": "A"
-    },
-    {
-        "question": "Was ist die Hauptstadt von Kanada?",
-        "A": "Ottawa",
-        "B": "Toronto",
-        "C": "Vancouver",
-        "D": "Montreal",
-        "answer": "A"
-    },
-    {
-        "question": "Wer schrieb 'Harry Potter'?",
-        "A": "J.K. Rowling",
-        "B": "Stephen King",
-        "C": "George R.R. Martin",
-        "D": "Tolkien",
-        "answer": "A"
-    },
-    {
-        "question": "Welcher Fluss fließt durch Paris?",
-        "A": "Seine",
-        "B": "Themse",
-        "C": "Donau",
-        "D": "Rhein",
-        "answer": "A"
-    },
-    {
-        "question": "Welche Farbe hat die Schwarze Witwe?",
-        "A": "Schwarz",
-        "B": "Rot",
-        "C": "Blau",
-        "D": "Grün",
-        "answer": "A"
-    },
-    {
-        "question": "Was ist die Hauptzutat in einer Margarita?",
-        "A": "Tequila",
-        "B": "Wodka",
-        "C": "Rum",
-        "D": "Gin",
-        "answer": "A"
-    },
-    {
-        "question": "Wer war der erste Mensch auf dem Mond?",
-        "A": "Neil Armstrong",
-        "B": "Buzz Aldrin",
-        "C": "Yuri Gagarin",
-        "D": "John Glenn",
-        "answer": "A"
-    },
-    {
-        "question": "Welches Element hat das chemische Symbol 'Fe'?",
-        "A": "Eisen",
-        "B": "Gold",
-        "C": "Silber",
-        "D": "Kupfer",
-        "answer": "A"
-    },
-    {
-        "question": "Wer ist der Präsident der Vereinigten Staaten von Amerika im Jahr 2024?",
-        "A": "Joe Biden",
-        "B": "Donald Trump",
-        "C": "Kamala Harris",
-        "D": "Barack Obama",
-        "answer": "A"
-    },
-    {
-        "question": "Was ist die Hauptstadt von Russland?",
-        "A": "Moskau",
-        "B": "St. Petersburg",
-        "C": "Kiew",
-        "D": "Minsk",
-        "answer": "A"
-    },
-    {
-        "question": "Wer schrieb 'Der Herr der Ringe'?",
-        "A": "J.R.R. Tolkien",
-        "B": "C.S. Lewis",
-        "C": "J.K. Rowling",
-        "D": "George R.R. Martin",
-        "answer": "A"
-    },
-    {
-        "question": "Was ist die Hauptzutat in Lasagne?",
-        "A": "Nudeln",
-        "B": "Fleisch",
-        "C": "Käse",
-        "D": "Tomatensauce",
-        "answer": "A"
-    },
-    {
-        "question": "Welches Tier ist das schnellste auf dem Land?",
-        "A": "Gepard",
-        "B": "Löwe",
-        "C": "Pferd",
-        "D": "Elefant",
-        "answer": "A"
-    },
-    {
-        "question": "Welches Land ist die Heimat des Eiffelturms?",
-        "A": "Frankreich",
-        "B": "Italien",
-        "C": "Spanien",
-        "D": "Deutschland",
-        "answer": "A"
-    },
-    {
-        "question": "Was ist die Hauptzutat in einem Mojito?",
-        "A": "Rum",
-        "B": "Wodka",
-        "C": "Gin",
-        "D": "Tequila",
-        "answer": "A"
-    },
-    {
-        "question": "Wer schrieb 'Die Schöne und das Biest'?",
-        "A": "Gabrielle-Suzanne Barbot de Villeneuve",
-        "B": "Hans Christian Andersen",
-        "C": "Brothers Grimm",
-        "D": "Charles Perrault",
-        "answer": "A"
-    },
-    {
-        "question": "Welche Farbe hat ein Smaragd?",
-        "A": "Grün",
-        "B": "Blau",
-        "C": "Rot",
-        "D": "Gelb",
-        "answer": "A"
-    },
-    {
-        "question": "Was ist die Hauptzutat in einer Margherita?",
-        "A": "Tequila",
-        "B": "Wodka",
-        "C": "Rum",
-        "D": "Gin",
-        "answer": "A"
-    },
-    {
-        "question": "Wer war der erste Mensch auf dem Mond?",
-        "A": "Neil Armstrong",
-        "B": "Buzz Aldrin",
-        "C": "Yuri Gagarin",
-        "D": "John Glenn",
-        "answer": "A"
-    },
-    {
-        "question": "Welches Element hat das chemische Symbol 'Fe'?",
-        "A": "Eisen",
-        "B": "Gold",
-        "C": "Silber",
-        "D": "Kupfer",
-        "answer": "A"
-    },
-    {
-        "question": "Wer war der Präsident der Vereinigten Staaten von Amerika im Jahr 2024?",
-        "A": "Joe Biden",
-        "B": "Donald Trump",
-        "C": "Kamala Harris",
-        "D": "Barack Obama",
-        "answer": "A"
-    },
-    {
-        "question": "Was ist die Hauptstadt von Brasilien?",
-        "A": "Brasília",
-        "B": "Rio de Janeiro",
-        "C": "São Paulo",
-        "D": "Belo Horizonte",
-        "answer": "A"
-    },
-    {
-        "question": "Wer schrieb 'Der kleine Prinz'?",
-        "A": "Antoine de Saint-Exupéry",
-        "B": "Hans Christian Andersen",
-        "C": "Roald Dahl",
-        "D": "J.K. Rowling",
-        "answer": "A"
-    },
-    {
-        "question": "Welches Land hat die längste Küstenlinie?",
-        "A": "Kanada",
-        "B": "Russland",
-        "C": "Australien",
-        "D": "Brasilien",
-        "answer": "A"
-    },
-    {
-        "question": "Was ist die Hauptzutat in einer Caesar Salad?",
-        "A": "Römersalat",
-        "B": "Hähnchenbrust",
-        "C": "Parmesan",
-        "D": "Croutons",
-        "answer": "A"
-    },
-    {
-        "question": "Wer malte 'Die Nachtwache'?",
-        "A": "Rembrandt",
-        "B": "Leonardo da Vinci",
-        "C": "Vincent van Gogh",
-        "D": "Pablo Picasso",
-        "answer": "A"
-    },
-    {
-        "question": "Was ist die chemische Formel für Wasser?",
-        "A": "H2O",
-        "B": "CO2",
-        "C": "CH4",
-        "D": "NaCl",
-        "answer": "A"
-    },
-    {
-        "question": "Welches Tier ist der größte landbewohnende Raubtier der Welt?",
-        "A": "Polarbär",
-        "B": "Tiger",
-        "C": "Löwe",
-        "D": "Grizzlybär",
-        "answer": "A"
-    },
-    {
-        "question": "Welches Land ist bekannt für seine Tulpenfelder?",
-        "A": "Niederlande",
-        "B": "Belgien",
-        "C": "Deutschland",
-        "D": "Frankreich",
-        "answer": "A"
-    },
-    {
-        "question": "Wer schrieb 'Die Leiden des jungen Werthers'?",
-        "A": "Johann Wolfgang von Goethe",
-        "B": "Friedrich Schiller",
-        "C": "Heinrich Heine",
-        "D": "Thomas Mann",
-        "answer": "A"
-    },
-    {
-        "question": "Was ist die Hauptzutat in einer Margarita?",
-        "A": "Tequila",
-        "B": "Wodka",
-        "C": "Rum",
-        "D": "Gin",
-        "answer": "A"
-    },
-    {
-        "question": "Wer schrieb 'Die Abenteuer des Huckleberry Finn'?",
-        "A": "Mark Twain",
-        "B": "Charles Dickens",
-        "C": "Ernest Hemingway",
-        "D": "F. Scott Fitzgerald",
-        "answer": "A"
-    },
-    {
-        "question": "Welche Farbe hat die Smaragdstadt in 'Der Zauberer von Oz'?",
-        "A": "Grün",
-        "B": "Blau",
-        "C": "Rot",
-        "D": "Gelb",
-        "answer": "A"
-    },
-    {
-        "question": "Welches Tier hat den längsten Hals?",
-        "A": "Giraffe",
-        "B": "Strauß",
-        "C": "Kamel",
-        "D": "Alpaka",
-        "answer": "A"
-    },
-    {
-        "question": "Welches Land hat die meisten Einwohner in Europa?",
-        "A": "Deutschland",
-        "B": "Frankreich",
-        "C": "Russland",
-        "D": "Türkei",
-        "answer": "A"
-    },
-    {
-        "question": "Was ist die Hauptzutat in einem Martini?",
-        "A": "Gin",
-        "B": "Wodka",
-        "C": "Rum",
-        "D": "Tequila",
-        "answer": "A"
-    },
-    {
-        "question": "Wer schrieb 'Die Grille und die Ameise'?",
-        "A": "Aesop",
-        "B": "Hans Christian Andersen",
-        "C": "Brothers Grimm",
-        "D": "Charles Perrault",
-        "answer": "A"
-    },
-    {
-        "question": "Welche Farbe hat ein Rubin?",
-        "A": "Rot",
-        "B": "Blau",
-        "C": "Grün",
-        "D": "Gelb",
-        "answer": "A"
-    },
-    {
-        "question": "Was ist die Hauptzutat in einer Margherita?",
-        "A": "Tequila",
-        "B": "Wodka",
-        "C": "Rum",
-        "D": "Gin",
-        "answer": "A"
-    },
-    {
-        "question": "Wer war der erste Mensch auf dem Mond?",
-        "A": "Neil Armstrong",
-        "B": "Buzz Aldrin",
-        "C": "Yuri Gagarin",
-        "D": "John Glenn",
-        "answer": "A"
-    },
-    {
-        "question": "Welches Element hat das chemische Symbol 'Fe'?",
-        "A": "Eisen",
-        "B": "Gold",
-        "C": "Silber",
-        "D": "Kupfer",
-        "answer": "A"
-    },
-    {
-        "question": "Wer ist der Präsident der Vereinigten Staaten von Amerika im Jahr 2024?",
-        "A": "Joe Biden",
-        "B": "Donald Trump",
-        "C": "Kamala Harris",
-        "D": "Barack Obama",
-        "answer": "A"
+        "question": "#ValueHero zu sein, bedeutet die Werte heldenhafter zu leben als andere.",
+        "A": "Nein",
+        "B": "Ja",
+        "C": "Vielleicht",
+        "D": "Selten",
+        "answer": "A",
+        "category": "Random"
     }
 ]
