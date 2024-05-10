@@ -14,7 +14,6 @@ self.addEventListener('install', function (event) {
         '/manifest.json',
         '/vite.svg',
         '/button-click-sound.mp3',
-        '/correct.mp3',
         '/game.mp3',
         '/goal.mp3',
         '/Paddle Ball Hit Sound Effect HD.mp3',
