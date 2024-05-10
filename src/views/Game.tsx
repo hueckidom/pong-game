@@ -27,13 +27,14 @@ let isPlaying1 = false;
 let bubble: any = null;
 
 export let gameDefaults: BaseSettings = {
-    baseVelocityX: 2,
+    velocityXIncrement: 1.25,
+    baseVelocityX: 2.5,
     baseVelocityY: 1.2,
     boardHeightDivisor: 1.7,
     maxBoardWidth: 700,
     maxLife: 2,
-    maxVelocityX: 5,
-    moveSpeed: 4.5,
+    maxVelocityX: 6,
+    moveSpeed: 5,
     playerHeight: 60,
     playerWidth: 8,
     key2Down: "s",
@@ -217,7 +218,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
             x: boardWidth / 2,
             y: Math.random() * boardHeight / 1.5 + 20,
             radius: 26,
-            velocityX: (Math.random() - 1.25) * 2,
+            velocityX: (Math.random() - 1.5) * ball.velocityX,
             velocityY: 1.2
         };
     };
@@ -331,7 +332,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
                 setPlayHit(true);
                 // left side of ball touches right side of player1
                 if (ball.x <= player1.x + player1.width) {
-                    ball.velocityX *= ball.velocityX < -maxVelocity ? -1 : -1.15;
+                    ball.velocityX *= ball.velocityX < -maxVelocity ? -1 : -gameDefaults.velocityXIncrement;
                 }
 
                 score.current += timeRef.current;
@@ -340,7 +341,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
                 setPlayHit(true);
                 // right side of ball touches left side player2
                 if (ball.x + ballWidth >= player2.x) {
-                    ball.velocityX *= ball.velocityX > maxVelocity ? -1 : -1.15;
+                    ball.velocityX *= ball.velocityX > maxVelocity ? -1 : -gameDefaults.velocityXIncrement;
                 }
 
                 score.current += timeRef.current;

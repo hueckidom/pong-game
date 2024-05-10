@@ -59,6 +59,7 @@ export interface Question {
 }
 
 export interface BaseSettings {
+    velocityXIncrement: number;
     baseVelocityX: number;
     baseVelocityY: number;
     maxLife: number;
