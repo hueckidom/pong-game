@@ -85,13 +85,14 @@ const Home: React.FC<HomeProps> = ({ }) => {
 
   return (
     <>
-      <div className="fixed w-full hero-img bottom-0 right-0">
-        <img className="w-2/4 max-w-96 opacity-25" src={valuehero} />
-      </div>
+
       <div className="hero min-h-screen bg-base-200">
         <div className="hero-content text-center">
           <div className="">
             <div className="title-wrapper mb-8 floating">
+              <div className="fixed w-full hero-img mb-20">
+                <img className="w-2/4 max-w-96 opacity-75" src={valuehero} />
+              </div>
               <h1 className="sweet-title sweet-title-mixed">
                 <span data-text="#ValueHero">#ValueHero</span>
               </h1>
