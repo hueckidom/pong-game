@@ -1,5 +1,12 @@
 import { values } from "./options";
 
+export type gamepad = {
+    type: string;
+    index: number,
+    value: number,
+    gamepadIndex: number;
+}
+
 export type player = {
     x: number;
     y: number;
