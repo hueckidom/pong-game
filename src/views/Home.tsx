@@ -5,12 +5,10 @@ import { useNavigate } from 'react-router-dom'
 import backgroundMusic from '../assets/game.mp3'
 import valuehero from '../assets/valuehero.png'
 import AudioComponent from '../components/Audio'
-import QuestionDialogCmp from '../components/QuestionDialog'
-import { addHandleGamePad } from '../utils/gamepad'
+import { addHandleGamePad, isDownPressed, isUpPressed, removeHandleGamePad } from '../utils/gamepad'
 
-const Home: React.FC<HomeProps> = ({}) => {
+const Home: React.FC<HomeProps> = ({ }) => {
   const [activeIndex, setActiveIndex] = useState(0)
-  const [activeIndexER, setActiveIndexER] = useState<gamepad>()
   const navigate = useNavigate()
 
   const goToGame = (): void => {
@@ -64,13 +62,24 @@ const Home: React.FC<HomeProps> = ({}) => {
 
     window.addEventListener('keydown', handleKeyPress)
 
-    addHandleGamePad((input: gamepad) => {
-      console.log(input)
-      setActiveIndexER(input)
-    })
+    const gamePadHandler = addHandleGamePad((input: gamepad) => {
+      if (input.type === 'button' && input.pressed) {
+        handlePress();
+        return;
+      }
+
+      if (isDownPressed(input)) {
+        setActiveIndex((prev) => (prev + 1) % 2)
+      }
+
+      if (isUpPressed(input)) {
+        setActiveIndex((prev) => (prev + 1) % 2)
+      }
+    });
 
     return () => {
-      window.removeEventListener('keydown', handleKeyPress)
+      window.removeEventListener('keydown', handleKeyPress);
+      removeHandleGamePad(gamePadHandler);
     }
   }, [activeIndex])
 
@@ -89,11 +98,6 @@ const Home: React.FC<HomeProps> = ({}) => {
             </div>
 
             <div className="flex flex-col gap-4">
-            gamepadIndex = {activeIndexER?.gamepadIndex}<br/>
-            index=   {activeIndexER?.index}<br/>
-            value=  {activeIndexER?.value}<br/>
-              {activeIndexER?.type}<br/>
-
               <button
                 className={(activeIndex === 0 ? 'active' : '') + ' kave-btn'}
               >
@@ -111,7 +115,7 @@ const Home: React.FC<HomeProps> = ({}) => {
           </div>
         </div>
         <AudioComponent
-          onAudioEnd={() => {}}
+          onAudioEnd={() => { }}
           path={backgroundMusic}
           volume={0.005}
         />

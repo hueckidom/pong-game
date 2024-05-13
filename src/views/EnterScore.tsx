@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getScores, saveScore } from "../utils/scores";
+import { addHandleGamePad, isDownPressed, isLeftPressed, isRightPressed, isUpPressed, removeHandleGamePad } from "../utils/gamepad";
+import { gamepad } from "../utils/types";
 
 const EnterScore: React.FC = () => {
     const [teamName, setTeamName] = useState('');
@@ -15,23 +17,18 @@ const EnterScore: React.FC = () => {
         const handleKeyPress = (event: KeyboardEvent) => {
             switch (event.key) {
                 case 'ArrowLeft':
-                    // Change to previous letter if the first option is active
                     if (activeIndex === 0) updateCurrentLetter(-1);
                     break;
                 case 'ArrowRight':
-                    // Change to next letter if the first option is active
                     if (activeIndex === 0) updateCurrentLetter(1);
                     break;
                 case 'ArrowUp':
-                    // Move selection up
                     setActiveIndex(prev => (prev > 0 ? prev - 1 : 0));
                     break;
                 case 'ArrowDown':
-                    // Move selection down
                     setActiveIndex(prev => (prev < 2 ? prev + 1 : 2));
                     break;
                 case ' ':
-                    // Activate the selected option
                     handleSpace();
                     break;
                 default:
@@ -41,6 +38,30 @@ const EnterScore: React.FC = () => {
 
         window.addEventListener('keydown', handleKeyPress);
 
+        const gamePadHandler = addHandleGamePad((input: gamepad) => {
+            if (input.type === 'button' && input.pressed) {
+                handleSpace();
+                return;
+            }
+
+            if (isDownPressed(input)) {
+                setActiveIndex(prev => (prev > 0 ? prev - 1 : 0));
+            }
+
+            if (isUpPressed(input)) {
+                setActiveIndex(prev => (prev < 2 ? prev + 1 : 2));
+            }
+
+            if (isLeftPressed(input)) {
+                if (activeIndex === 0) updateCurrentLetter(-1);
+            }
+
+            if (isRightPressed(input)) {
+                if (activeIndex === 0) updateCurrentLetter(1);
+            }
+
+        });
+
         const query = new URLSearchParams(location.search);
         const scoreParam = query.get('score');
         if (scoreParam) {
@@ -49,6 +70,7 @@ const EnterScore: React.FC = () => {
 
         return () => {
             window.removeEventListener('keydown', handleKeyPress);
+            removeHandleGamePad(gamePadHandler);
         };
     }, [currentLetter, activeIndex]);
 
@@ -86,7 +108,9 @@ const EnterScore: React.FC = () => {
         if (teamName.length === 0) return;
 
         saveScore(score, teamName);
-        navigate('/scores');
+        setTimeout(() => {
+            navigate('/scores');
+        }, 200)
     };
 
     return (
@@ -96,7 +120,7 @@ const EnterScore: React.FC = () => {
                 <div className="text-center">
                     <div className="flex gap-2 justify-center">
                         <span>Euer Team Name: </span>
-                        <div>{teamName}<span className="blink-ani ml-1">{currentLetter}</span></div>
+                        <div>{teamName}<span className="blink-ani">{currentLetter}</span></div>
 
                     </div>
                     <div>

@@ -12,6 +12,7 @@ import {
     BaseSettings,
     MultiplePlayerModeProps,
     ball,
+    gamepad,
     player,
 } from "../utils/types";
 import hitSound from "../assets/Paddle Ball Hit Sound Effect HD.mp3";
@@ -21,6 +22,7 @@ import backgroundMusic from "../assets/game.mp3";
 import { determineBoardWidth } from "../utils/board";
 import QuestionDialogCmp from "../components/QuestionDialog";
 import { values } from "../utils/options";
+import { addHandleGamePad, isDownPressed, isPressReleased, isUpPressed, removeHandleGamePad } from "../utils/gamepad";
 
 let isPlaying1 = false;
 let bubble: any = null;
@@ -28,7 +30,7 @@ let setValue: values = "Vertrauen";
 
 export let gameDefaults: BaseSettings = {
     velocityXIncrement: 1.15,
-    baseVelocityX: 2,
+    baseVelocityX: 1.5,
     baseVelocityY: 1.50,
     boardHeightDivisor: 1.7,
     maxBoardWidth: 700,
@@ -472,10 +474,51 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
         bubble = null;
         // loop of game
         // requestAnimationFrame(animate);
-        const intervall = setInterval(animate, 1000 / 120);
+        const intervall = setInterval(animate, 1000 / 60);
 
         window.addEventListener("keydown", movePlayer);
         window.addEventListener("keyup", stopMovingPlayer);
+
+        const gamePadHandler = addHandleGamePad((input: gamepad) => {
+            const isPlayer1 = input.gamepadIndex === 0;
+            const isPlayer2 = input.gamepadIndex === 1;
+
+
+            if (isPressReleased(input)) {
+                if (isPlayer1) {
+                    player1.stopPlayer = true;
+                }
+
+                if (isPlayer2) {
+                    player2.stopPlayer = true;
+                }
+            }
+
+            if (isDownPressed(input)) {
+                if (isPlayer1) {
+                    player1.velocityY = -moveSpeed;
+                    player1.stopPlayer = false;
+                }
+
+                if (isPlayer2) {
+                    player2.velocityY = -moveSpeed;
+                    player2.stopPlayer = false;
+                }
+            }
+
+            if (isUpPressed(input)) {
+                if (isPlayer1) {
+                    player1.velocityY = moveSpeed;
+                    player1.stopPlayer = false;
+                }
+
+                if (isPlayer2) {
+                    player2.velocityY = moveSpeed;
+                    player2.stopPlayer = false;
+                }
+            }
+        });
+
         startBubbleTimer();
 
         return () => {
@@ -483,6 +526,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
             clearInterval(intervall);
             window.removeEventListener("keydown", movePlayer);
             window.removeEventListener("keyup", stopMovingPlayer);
+            removeHandleGamePad(gamePadHandler);
         };
     }, []);
 

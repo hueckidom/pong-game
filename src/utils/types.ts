@@ -1,7 +1,9 @@
 import { values } from "./options";
 
 export type gamepad = {
-    type: string;
+    type: "button" | "pad";
+    pressed: boolean;
+    isRelease: boolean;
     index: number,
     value: number,
     gamepadIndex: number;

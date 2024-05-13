@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Score } from "../utils/types";
+import { Score, gamepad } from "../utils/types";
 import QuestionDialogCmp from "../components/QuestionDialog";
+import { addHandleGamePad, removeHandleGamePad } from "../utils/gamepad";
 
 const ShowScores: React.FC = () => {
     const [highscores, setHighscores] = useState<Score[]>([]);
@@ -24,8 +25,19 @@ const ShowScores: React.FC = () => {
 
         window.addEventListener("keydown", handleKeyPress);
 
+
+        const gamePadHandler = addHandleGamePad((input: gamepad) => {
+            if (input.type === 'button' && input.pressed) {
+                setTimeout(() => {
+                    navigate('/');
+                }, 200)
+                return;
+            }
+        });
+
         return () => {
             window.removeEventListener("keydown", handleKeyPress);
+            removeHandleGamePad(gamePadHandler);
         };
     }, []);
 
