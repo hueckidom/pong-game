@@ -4,20 +4,31 @@ import { getScores, saveScore } from "../utils/scores";
 import { addHandleGamePad, isDownPressed, isLeftPressed, isRightPressed, isUpPressed, removeHandleGamePad } from "../utils/gamepad";
 import { gamepad } from "../utils/types";
 
+
 const EnterScore: React.FC = () => {
     const [teamName, setTeamName] = useState('');
     const [currentLetter, setCurrentLetter] = useState('a');
     const [activeIndex, setActiveIndex] = useState(0); // 0: Letter, 1: Remove, 2: Confirm
     const [score, setScore] = useState<number>(0);
     const currentScores = getScores();
-    //check if score is in top ten
     const scoreNotAtTopTen = currentScores.length < 10 || currentScores[currentScores.length - 1].score < score;
 
     const navigate = useNavigate();
     const location = useLocation();
 
     useEffect(() => {
+
+        const query = new URLSearchParams(location.search);
+        const scoreParam = query.get('score');
+        const scorePkt = parseInt(scoreParam || '0', 10);
+
+
         const handleKeyPress = (event: KeyboardEvent) => {
+            if (!scoreNotAtTopTen) {
+                handleSpace();
+                return
+            };
+
             switch (event.key) {
                 case 'ArrowLeft':
                     if (activeIndex === 0) updateCurrentLetter(-1);
@@ -47,6 +58,10 @@ const EnterScore: React.FC = () => {
                 return;
             }
 
+            if (!scoreNotAtTopTen) {
+                return
+            };
+
             if (isDownPressed(input)) {
                 setActiveIndex(prev => (prev > 0 ? prev - 1 : 0));
             }
@@ -65,10 +80,8 @@ const EnterScore: React.FC = () => {
 
         });
 
-        const query = new URLSearchParams(location.search);
-        const scoreParam = query.get('score');
         if (scoreParam) {
-            setScore(parseInt(scoreParam, 10));
+            setScore(scorePkt);
         }
 
         return () => {
@@ -90,6 +103,14 @@ const EnterScore: React.FC = () => {
     };
 
     const handleSpace = () => {
+
+        if (!scoreNotAtTopTen) {
+            setTimeout(() => {
+                navigate('/scores');
+            }, 200);
+            return;
+        };
+
         if (activeIndex === 0) {
             addLetter();
         } else if (activeIndex === 1) {
@@ -123,6 +144,9 @@ const EnterScore: React.FC = () => {
                     <div className="text-4xl">Euer score: {score}</div>
                     <div className="text-3xl">Ihr seid leider keine Top Heros</div>
                     <div className="text-5xl">🤔</div>
+                    <div className={(activeIndex === 0 ? "bg-primary" : "") + " kbd"} onClick={confirmName}>
+                        Na, gut...
+                    </div>
                 </div>
             </div>}
 
