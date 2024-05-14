@@ -6,10 +6,13 @@ import { gamepad } from "../utils/types";
 
 const EnterScore: React.FC = () => {
     const [teamName, setTeamName] = useState('');
-    const [currentLetter, setCurrentLetter] = useState('A');
+    const [currentLetter, setCurrentLetter] = useState('a');
     const [activeIndex, setActiveIndex] = useState(0); // 0: Letter, 1: Remove, 2: Confirm
     const [score, setScore] = useState<number>(0);
     const currentScores = getScores();
+    //check if score is in top ten
+    const scoreNotAtTopTen = currentScores.length < 10 || currentScores[currentScores.length - 1].score < score;
+
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -83,7 +86,7 @@ const EnterScore: React.FC = () => {
         } else {
             currentCharCode += direction;
         }
-        setCurrentLetter(String.fromCharCode(currentCharCode));
+        setCurrentLetter(String.fromCharCode(currentCharCode).toLowerCase());
     };
 
     const handleSpace = () => {
@@ -114,33 +117,43 @@ const EnterScore: React.FC = () => {
     };
 
     return (
-        <div className="hero min-h-screen bg-base-200">
-            <div className="hero-content text-left flex-col">
-                <div className="text-4xl ">Euer score: {score}</div>
-                <div className="text-center">
-                    <div className="flex gap-2 justify-center">
-                        <span>Euer Team Name: </span>
-                        <div>{teamName}<span className="blink-ani">{currentLetter}</span></div>
+        <>
+            {!scoreNotAtTopTen && <div className="hero min-h-screen bg-base-200">
+                <div className="hero-content text-center flex-col gap-4">
+                    <div className="text-4xl">Euer score: {score}</div>
+                    <div className="text-3xl">Ihr seid leider keine Top Heros</div>
+                    <div className="text-5xl">🤔</div>
+                </div>
+            </div>}
 
-                    </div>
-                    <div>
-                        <div className={"p-4 text-center flex gap-2 justify-center"}>
-                            <kbd className="p-2">◀︎</kbd>
-                            <span className={(activeIndex === 0 ? "bg-primary" : "") + " kbd"}>{currentLetter}</span>
-                            <kbd className="p-2">▶︎</kbd>
+            {scoreNotAtTopTen && <div className="hero min-h-screen bg-base-200">
+                <div className="hero-content text-left flex-col">
+                    <div className="text-5xl ">Euer score: {score}</div>
+                    <div className="text-center">
+                        <div className="flex gap-2 justify-center text-2xl ">
+                            <span>Euer Team Name: </span>
+                            <div>{teamName}<span className="blink-ani">{currentLetter}</span></div>
+
                         </div>
-                        <div className="flex gap-4 p-4">
-                            <div className={"p-2 kbd " + (activeIndex === 1 ? "bg-primary" : "")} onClick={removeLastLetter}>
-                                Löschen
+                        <div>
+                            <div className={"p-4 text-center flex gap-2 justify-center"}>
+                                <kbd className="p-2">◀︎</kbd>
+                                <span className={(activeIndex === 0 ? "bg-primary" : "") + " kbd text-2xl"}>{currentLetter}</span>
+                                <kbd className="p-2">▶︎</kbd>
                             </div>
-                            <div className={(activeIndex === 2 ? "bg-primary" : "") + " kbd"} onClick={confirmName}>
-                                Bestätigen
+                            <div className="flex gap-4 p-4 justify-center text-2xl">
+                                <div className={"p-2 kbd " + (activeIndex === 1 ? "bg-primary" : "")} onClick={removeLastLetter}>
+                                    ←
+                                </div>
+                                <div className={(activeIndex === 2 ? "bg-primary" : "") + " kbd"} onClick={confirmName}>
+                                    Bestätigen
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div>}
+        </>
     );
 };
 

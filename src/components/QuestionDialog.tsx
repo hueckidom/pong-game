@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Question, QuestionDialogProps } from "../utils/types";
+import { Question, QuestionDialogProps, gamepad } from "../utils/types";
 import questions from "../assets/questions.json";
+import { addHandleGamePad, isDownPressed, isUpPressed, removeHandleGamePad } from "../utils/gamepad";
 
 const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
     value,
@@ -81,8 +82,24 @@ const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
 
         window.addEventListener('keydown', handleKeyPress);
 
+        const gamePadHandler = addHandleGamePad((input: gamepad) => {
+            if (input.type === 'button' && input.pressed) {
+                handleSpace();
+                return;
+            }
+
+            if (isDownPressed(input)) {
+                setActiveIndex((prev) => (prev > 0 ? prev - 1 : 0));
+            }
+            
+            if (isUpPressed(input)) {
+                setActiveIndex((prev) => (prev < 3 ? prev + 1 : 3));
+            }
+        });
+
         return () => {
             window.removeEventListener('keydown', handleKeyPress);
+            removeHandleGamePad(gamePadHandler);
         };
     }, [activeIndex, question]);
 

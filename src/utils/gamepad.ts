@@ -1,7 +1,7 @@
 import { gamepad } from './types';
 
 
-export let pressedPads: number[] = [];
+export let pressedPads: { gamepadIndex: number, index: number }[] = [];
 export const addHandleGamePad = (handleInput: any) => {
     let intervalId: number | undefined;
 
@@ -28,6 +28,7 @@ export const addHandleGamePad = (handleInput: any) => {
 
             // axis movements
             gamepad.axes.forEach((axis, index) => {
+
                 if (axis === 1 || axis === -1) {
                     handleInput({
                         type: 'pad',
@@ -36,15 +37,15 @@ export const addHandleGamePad = (handleInput: any) => {
                         gamepadIndex: gamepad.index
                     });
 
-                    if (!pressedPads.includes(index)) {
-                        pressedPads.push(index);
+                    if (!pressedPads.find(o => o.gamepadIndex === gamepad.index && o.index === index)) {
+                        pressedPads.push({ gamepadIndex: gamepad.index, index: index });
                     }
                     return;
                 }
 
 
 
-                if (pressedPads.includes(index)) {
+                if (pressedPads.find(o => o.gamepadIndex === gamepad.index && o.index === index)) {
                     handleInput({
                         type: 'pad',
                         index: index,
@@ -53,7 +54,7 @@ export const addHandleGamePad = (handleInput: any) => {
                         isRelease: true
                     });
 
-                    pressedPads = pressedPads.filter((pad) => pad !== index);
+                    pressedPads = pressedPads.filter((pad) => pad.gamepadIndex !== gamepad.index && pad.index !== index);
                 }
             });
         }
