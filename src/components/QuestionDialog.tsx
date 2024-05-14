@@ -13,10 +13,10 @@ const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
     let timeout: any;
 
     useEffect(() => {
-        const questionToCategory = questions.filter((q) => q.category == value);
-        const randoms = questions.filter((o) => o.category === "random");
-        const allQuestions = [...questionToCategory, ...randoms];
-        const randomQuestion: Question = allQuestions[Math.floor(Math.random() * allQuestions.length)];
+        // const questionToCategory = questions.filter((q) => q.category == value);
+        // const randoms = questions.filter((o) => o.category === "random");
+        // const allQuestions = [...questionToCategory, ...randoms];
+        const randomQuestion: Question = questions[Math.floor(Math.random() * questions.length)];
         setQuestion(randomQuestion);
     }, []);
 
