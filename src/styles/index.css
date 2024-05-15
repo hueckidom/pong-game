@@ -68,9 +68,7 @@ body {
     background-image: 
       radial-gradient(1px 1px at 25px 5px, white, rgba(255, 255, 255, 0)), 
       radial-gradient(1px 1px at 50px 25px, white, rgba(255, 255, 255, 0)), 
-      radial-gradient(1px 1px at 125px 20px, white, rgba(255, 255, 255, 0)), 
       radial-gradient(1.5px 1.5px at 50px 75px, white, rgba(255, 255, 255, 0)), 
-      radial-gradient(2px 2px at 15px 125px, white, rgba(255, 255, 255, 0)), 
       radial-gradient(2.5px 2.5px at 110px 80px, white, rgba(255, 255, 255, 0));
   }
   
@@ -78,10 +76,8 @@ body {
     animation: space 80s ease-in-out infinite;
     background-image: 
       radial-gradient(1px 1px at 75px 125px, white, rgba(255, 255, 255, 0)), 
-      radial-gradient(1px 1px at 100px 75px, white, rgba(255, 255, 255, 0)), 
       radial-gradient(1.5px 1.5px at 199px 100px, white, rgba(255, 255, 255, 0)), 
       radial-gradient(2px 2px at 20px 50px, white, rgba(255, 255, 255, 0)), 
-      radial-gradient(2.5px 2.5px at 100px 5px, white, rgba(255, 255, 255, 0)), 
       radial-gradient(2.5px 2.5px at 5px 5px, white, rgba(255, 255, 255, 0));
   }
   
@@ -89,10 +85,8 @@ body {
     animation: space 120s ease-in-out infinite;
     background-image: 
       radial-gradient(1px 1px at 10px 10px, white, rgba(255, 255, 255, 0)), 
-      radial-gradient(1px 1px at 150px 150px, white, rgba(255, 255, 255, 0)), 
       radial-gradient(1.5px 1.5px at 60px 170px, white, rgba(255, 255, 255, 0)), 
       radial-gradient(1.5px 1.5px at 175px 180px, white, rgba(255, 255, 255, 0)), 
-      radial-gradient(2px 2px at 195px 95px, white, rgba(255, 255, 255, 0)), 
       radial-gradient(2.5px 2.5px at 95px 145px, white, rgba(255, 255, 255, 0));
   }
   
@@ -345,3 +339,45 @@ body {
       transform: translateY(0px) skew(0, 352deg);
     }
   }
+
+
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    5%, 95% { transform: translateX(-10px); }
+    10%, 90% { transform: translateX(10px); }
+    15%, 85% { transform: translateX(-15px); }
+    20%, 80% { transform: translateX(10px); }
+    25%, 75% { transform: translateX(-10px); }
+    30%, 70% { transform: translateX(15px); }
+    35%, 65% { transform: translateX(-10px); }
+    40%, 60% { transform: translateX(10px); }
+    45%, 55% { transform: translateX(0px); }
+    50%, 100% { transform: translateX(0); }
+  }
+
+.shake-effect {
+  animation: shake infinite 3s;
+}
+
+/* // the container will be blacked out for 2 seconds */
+.blackout-effect{
+  animation: blackout infinite 2s;
+}
+
+@keyframes blackout {
+  0% {
+    opacity: 0.8; 
+  }
+  30% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 0.25;
+  }
+  60% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}

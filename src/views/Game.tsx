@@ -27,6 +27,7 @@ import { addHandleGamePad, isDownPressed, isPressReleased, isUpPressed, removeHa
 let isPlaying1 = false;
 let bubble: any = null;
 let setValue: values = "Vertrauen";
+let tGameEffect = "none";
 
 export let gameDefaults: BaseSettings = {
     velocityXIncrement: 1.15,
@@ -34,8 +35,8 @@ export let gameDefaults: BaseSettings = {
     baseVelocityY: 1.50,
     boardHeightDivisor: 1.7,
     maxBoardWidth: 700,
-    maxLife: 2,
-    maxVelocityX: 6,
+    maxLife: 32,
+    maxVelocityX: 5,
     moveSpeed: 5,
     playerHeight: 60,
     playerWidth: 10,
@@ -62,6 +63,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
     let maxVelocity = Number(gameDefaults.maxVelocityX);
     let maxLife = gameDefaults.maxLife;
     let valueQue: values[] = ["Vertrauen", "Bodenständigkeit", "Leistung", "Respekt", "Verbundenheit"];
+    const [gameEffect, setGameEffect] = useState<"shake" | "smallerPad" | "blackout" | "none" | "velocityYChange">("blackout");
 
     let player1: player = {
         x: 2,
@@ -157,7 +159,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
     };
 
     const startBubbleTimer = () => {
-        const spawnInterval = Math.random() * 4000 + (10000);
+        const spawnInterval = Math.random() * 5000 + (14000);
         setTimeout(spawnBubble, spawnInterval);
     };
 
@@ -223,7 +225,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
             x: boardWidth / 2,
             y: Math.random() * boardHeight / 1.5 + 20,
             radius: 26,
-            velocityX: (Math.random() - 1.5) * ball.velocityX,
+            velocityX: ball.velocityX,
             velocityY: 1.2
         };
     };
@@ -276,11 +278,33 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
 
     useEffect(() => {
         setValue = currentValue;
+
+        //set the game effect based on the value
+        switch (currentValue) {
+            case "Bodenständigkeit":
+                setGameEffect("velocityYChange");
+                break;
+            case "Leistung":
+                setGameEffect("smallerPad");
+                break;
+            case "Respekt":
+                setGameEffect("velocityYChange");
+                break;
+            case "Verbundenheit":
+                setGameEffect("blackout");
+                break;
+            case "Vertrauen":
+                setGameEffect("none");
+                break;
+        }
     }, [currentValue]);
 
-    const animate = (): void => {
-        // requestAnimationFrame(animate);
+    useEffect(() => {
+        tGameEffect = gameEffect;
+    }, [gameEffect]);
 
+    const animate = (): void => {
+        requestAnimationFrame(animate);
 
         if (isPlaying1 === true) {
             setBackgroundMusicPlaying(true);
@@ -298,7 +322,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
                 player1.x,
                 player1.y,
                 player1.width,
-                player1.height,
+                player1.height - (tGameEffect === "smallerPad" ? 15 : 0),
             );
 
             // moving the player 2 up and down
@@ -311,9 +335,9 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
                 player2.x,
                 player2.y,
                 player2.width,
-                player2.height,
+                player2.height - (tGameEffect === "smallerPad" ? 15 : 0),
 
-            ); // fillRect(x,y,width,height)
+            );
             // changing the color of the ball
             context.fillStyle = "#fff";
 
@@ -333,7 +357,6 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
             updateBubblePosition();
             drawBubble();
 
-
             // changing the velocity/direction of the ball when it hits the top/bottom of boundries.
             if (ball.y <= 0 || ball.y + ball.height >= boardHeight) {
                 ball.velocityY *= -1;
@@ -346,6 +369,10 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
                     ball.velocityX *= ball.velocityX < -maxVelocity ? -1 : -Number(gameDefaults.velocityXIncrement);
                 }
 
+                if (tGameEffect === "velocityYChange") {
+                    ball.velocityY = 2;
+                }
+
                 score.current += timeRef.current;
 
             } else if (detectCollision(ball, player2)) {
@@ -353,6 +380,10 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
                 // right side of ball touches left side player2
                 if (ball.x + ballWidth >= player2.x) {
                     ball.velocityX *= ball.velocityX > maxVelocity ? -1 : - Number(gameDefaults.velocityXIncrement);
+                }
+
+                if (tGameEffect === "velocityYChange") {
+                    ball.velocityY = -2;
                 }
 
                 score.current += timeRef.current;
@@ -473,8 +504,8 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
         isPlaying1 = true;
         bubble = null;
         // loop of game
-        // requestAnimationFrame(animate);
-        const intervall = setInterval(animate, 1000 / 60);
+        requestAnimationFrame(animate);
+        // const intervall = setInterval(animate, 1000 / 60);
 
         window.addEventListener("keydown", movePlayer);
         window.addEventListener("keyup", stopMovingPlayer);
@@ -523,7 +554,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
 
         return () => {
             resetTimer();
-            clearInterval(intervall);
+            // clearInterval(intervall);
             window.removeEventListener("keydown", movePlayer);
             window.removeEventListener("keyup", stopMovingPlayer);
             removeHandleGamePad(gamePadHandler);
@@ -543,8 +574,8 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
                 <span className="opacity-75">hoch!</span>
             </div>
             {/* Game board  */}
-            <div className="gradient-border">
-                <canvas className="bg-base-300 mt-10 m-auto shadow-lg " id="board"></canvas>
+            <div className={(gameEffect === "shake" ? "shake-effect" : "") + gameEffect === "blackout" ? "blackout-effect" : "" + " gradient-border"}>
+                <canvas className={" bg-base-300 mt-10 m-auto shadow-lg"} id="board"></canvas>
             </div>
             {/* Score */}
             <div className="stats shadow-xl bg-base-200 p-2 mt-8">
