@@ -119,9 +119,9 @@ export const isUpPressed = (input: gamepad) => {
 }
 
 export const isLeftPressed = (input: gamepad) => {
-    return input.index == 0 && input.value == 1;
+    return input.index == 0 && input.value == -1;
 }
 
 export const isRightPressed = (input: gamepad) => {
-    return input.index == 0 && input.value == -1;
+    return input.index == 0 && input.value == 1;
 }

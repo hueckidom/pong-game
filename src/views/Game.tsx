@@ -46,7 +46,7 @@ export let gameDefaults: BaseSettings = {
     keyUp: "ArrowUp",
     volume: 0.06,
     questionSeconds: 20,
-    pushInterval: 120,
+    pushInterval: 160,
 }
 
 export const assignGameDefaults = (settings: BaseSettings) => {

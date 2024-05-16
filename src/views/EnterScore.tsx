@@ -155,7 +155,10 @@ const EnterScore: React.FC = () => {
     };
 
     const confirmName = () => {
-        if (state.teamname.length === 0) return;
+        if (state.teamname.length === 0) {
+            setIsError(true);
+            return;
+        };
 
         saveScore(state.score, state.teamname);
         setTimeout(() => {
@@ -169,7 +172,7 @@ const EnterScore: React.FC = () => {
                 <div className="hero-content text-center flex-col gap-4">
                     <div className="text-4xl">Euer score: {score}</div>
                     <div className="text-3xl">Ihr seid leider keine Top Heros</div>
-                    <div className="text-5xl">🤔</div>
+                    <div className="text-5xl">...</div>
                     <div className={(activeIndex === 0 ? "bg-primary" : "") + " kbd"} onClick={confirmName}>
                         Na, gut...
                     </div>
