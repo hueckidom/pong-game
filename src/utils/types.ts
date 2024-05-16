@@ -82,4 +82,5 @@ export interface BaseSettings {
     keyDown: string;
     key2Up: string;
     key2Down: string;
+    volume: number;	
 }

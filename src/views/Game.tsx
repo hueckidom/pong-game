@@ -30,8 +30,8 @@ let setValue: values = "Vertrauen";
 let tGameEffect = "none";
 
 export let gameDefaults: BaseSettings = {
-    velocityXIncrement: 1.2,
-    baseVelocityX: 1.5,
+    velocityXIncrement: 1.3,
+    baseVelocityX: 2.5,
     baseVelocityY: 1.50,
     boardHeightDivisor: 1.7,
     maxBoardWidth: 700,
@@ -43,7 +43,8 @@ export let gameDefaults: BaseSettings = {
     key2Down: "s",
     key2Up: "w",
     keyDown: "ArrowDown",
-    keyUp: "ArrowUp"
+    keyUp: "ArrowUp",
+    volume: 0.2,
 }
 
 export const assignGameDefaults = (settings: BaseSettings) => {
@@ -138,7 +139,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
     const [backgroundAudio] = useState(new Audio(backgroundMusic));
 
     useEffect(() => {
-        backgroundAudio.volume = 0.18;
+        backgroundAudio.volume = 0.1;
         backgroundAudio.play();
 
         return () => {
@@ -147,7 +148,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
         };
     }, []);
 
-    const playSound = (src: string, volume = 0.5) => {
+    const playSound = (src: string, volume = gameDefaults.volume) => {
         const audio = new Audio(src);
         audio.play();
         audio.loop = false;
