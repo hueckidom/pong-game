@@ -3,12 +3,30 @@ import { gamepad } from './types';
 
 
 export let pressedPads: { gamepadIndex: number, index: number }[] = [];
-export const addHandleGamePad = (handleInput: any) => {
-    let intervalId: number | undefined;
+
+const padListeners = [] as any[];
+const animationFrameIds = {} as any;
+
+
+export const addGamePadListener = (callbackFunc: any) => {
+    let gamepadIndexActive = [] as number[];
+    padListeners.push(callbackFunc);
+    const index = Math.random() * 1000000;
+    console.log('addGamePadListener', index);
+
+    async function handle(args?: any) {
+        if (gamepadIndexActive.includes(args.gamepadIndex)) return;
+
+        gamepadIndexActive.push(args.gamepadIndex);
+        callbackFunc(args)
+        await new Promise((resolve) => setTimeout(resolve, gameDefaults.pushInterval));
+        gamepadIndexActive = gamepadIndexActive.filter(o => o != args.gamepadIndex);
+    }
 
     const handleGamePadInput = () => {
         const gamepads = navigator.getGamepads();
         if (!gamepads) {
+            animationFrameIds[index] = requestAnimationFrame(handleGamePadInput);
             return;
         }
 
@@ -18,7 +36,7 @@ export const addHandleGamePad = (handleInput: any) => {
             // button presses
             gamepad.buttons.forEach((button, index) => {
                 if (button.pressed) {
-                    handleInput({
+                    handle({
                         type: 'button',
                         index: index,
                         pressed: button.pressed,
@@ -31,7 +49,7 @@ export const addHandleGamePad = (handleInput: any) => {
             gamepad.axes.forEach((axis, index) => {
 
                 if (axis === 1 || axis === -1) {
-                    handleInput({
+                    handle({
                         type: 'pad',
                         index: index,
                         value: axis,
@@ -47,7 +65,7 @@ export const addHandleGamePad = (handleInput: any) => {
 
 
                 if (pressedPads.find(o => o.gamepadIndex === gamepad.index && o.index === index)) {
-                    handleInput({
+                    callbackFunc({
                         type: 'pad',
                         index: index,
                         value: axis,
@@ -59,17 +77,34 @@ export const addHandleGamePad = (handleInput: any) => {
                 }
             });
         }
+
+        animationFrameIds[index] = requestAnimationFrame(handleGamePadInput);
     };
 
-    intervalId = window.setInterval(handleGamePadInput, gameDefaults.pushInterval);
-    return intervalId;
+    animationFrameIds[index] = requestAnimationFrame(handleGamePadInput);
+
+    return index;
 };
 
-export const removeHandleGamePad = (intervalId: number) => {
-    if (intervalId) {
-        clearInterval(intervalId);
+export const debounce = <T extends (...args: any[]) => any>(
+    func: T,
+    delay: number
+): ((...args: Parameters<T>) => void) => {
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
+    return (...args: Parameters<T>): void => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => func(...args), delay);
+    };
+};
+
+export const removeGamePadListener = (func: any, index: number) => {
+    console.log('removeGamePadListener', index);
+    padListeners.splice(padListeners.indexOf(func), 1);
+    if (animationFrameIds[index]) {
+        cancelAnimationFrame(animationFrameIds[index]);
     }
-}
+};
 
 export const isPressReleased = (input: gamepad) => {
     return input.index == 1 && input.isRelease;

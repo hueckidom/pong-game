@@ -22,7 +22,7 @@ import backgroundMusic from "../assets/game.mp3";
 import { determineBoardWidth } from "../utils/board";
 import QuestionDialogCmp from "../components/QuestionDialog";
 import { values } from "../utils/options";
-import { addHandleGamePad, isDownPressed, isPressReleased, isUpPressed, removeHandleGamePad } from "../utils/gamepad";
+import { addGamePadListener, isDownPressed, isPressReleased, isUpPressed, removeGamePadListener } from "../utils/gamepad";
 
 let isPlaying1 = false;
 let bubble: any = null;
@@ -30,9 +30,9 @@ let setValue: values = "Vertrauen";
 let tGameEffect = "none";
 
 export let gameDefaults: BaseSettings = {
-    velocityXIncrement: 1.3,
+    velocityXIncrement: 1.2,
     baseVelocityX: 2.5,
-    baseVelocityY: 1.50,
+    baseVelocityY: 1.7,
     boardHeightDivisor: 1.7,
     maxBoardWidth: 700,
     maxLife: 2,
@@ -46,13 +46,15 @@ export let gameDefaults: BaseSettings = {
     keyUp: "ArrowUp",
     volume: 0.06,
     questionSeconds: 20,
-    pushInterval: 110,
+    pushInterval: 120,
 }
 
 export const assignGameDefaults = (settings: BaseSettings) => {
     gameDefaults = settings;
 }
 
+let animationFrame: any;
+let isSpawningBubble = false;
 const GameField: React.FC<MultiplePlayerModeProps> = ({
 }) => {
     let boardWidth: number = determineBoardWidth();
@@ -64,6 +66,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
     let playerVelocityY = 0;
     let moveSpeed = Number(gameDefaults.moveSpeed);
     let maxVelocity = Number(gameDefaults.maxVelocityX);
+    let maxVelocityY = 3;
     let maxLife = gameDefaults.maxLife;
     let valueQue: values[] = ["Vertrauen", "Bodenständigkeit", "Leistung", "Verbundenheit", "Respekt"];
     const [gameEffect, setGameEffect] = useState<"shake" | "smallerPad" | "blackout" | "none" | "velocityYChange">("none");
@@ -162,6 +165,9 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
     };
 
     const startBubbleTimer = () => {
+        if (isSpawningBubble) return;
+
+        isSpawningBubble = true;
         const spawnInterval = Math.random() * 5000 + (12000);
         setTimeout(spawnBubble, spawnInterval);
     };
@@ -182,6 +188,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
         setTimeout(() => {
             triggerPause();
             bubble = null;
+            isSpawningBubble = false;
             startBubbleTimer();
         }, 250);
     }
@@ -195,6 +202,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
             triggerPause();
             bubble = null;
             startBubbleTimer();
+            isSpawningBubble = false;
             setLife((prevLife) => prevLife - 1);
         }, 250);
     }
@@ -309,7 +317,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
     }, [gameEffect]);
 
     const animate = (): void => {
-        requestAnimationFrame(animate);
+        animationFrame = requestAnimationFrame(animate);
 
         if (isPlaying1 === true) {
             setBackgroundMusicPlaying(true);
@@ -364,7 +372,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
 
             // changing the velocity/direction of the ball when it hits the top/bottom of boundries.
             if (ball.y <= 0 || ball.y + ball.height >= boardHeight) {
-                ball.velocityY *= -1;
+                ball.velocityY *= ((ball.velocityY > maxVelocityY || ball.velocityY < -maxVelocityY) ? -1 : -1.05);
             }
             // detecting collision with player1 or with player2
             if (detectCollision(ball, player1)) {
@@ -400,7 +408,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
                     width: ballWidth,
                     height: ballHeight,
                     velocityX: direction,
-                    velocityY: ball.velocityY * 1.4,
+                    velocityY: 3,
                 };
             };
 
@@ -509,13 +517,14 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
         isPlaying1 = true;
         bubble = null;
         // loop of game
-        requestAnimationFrame(animate);
+        animationFrame = requestAnimationFrame(animate);
         // const intervall = setInterval(animate, 1000 / 60);
 
         window.addEventListener("keydown", movePlayer);
         window.addEventListener("keyup", stopMovingPlayer);
 
-        const gamePadHandler = addHandleGamePad((input: gamepad) => {
+
+        const gamePadHandler = (input: gamepad) => {
             const isPlayer1 = input.gamepadIndex === 0;
             const isPlayer2 = input.gamepadIndex === 1;
 
@@ -553,7 +562,9 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
                     player2.stopPlayer = false;
                 }
             }
-        });
+        };
+
+        const padIndex = addGamePadListener(gamePadHandler);
 
         startBubbleTimer();
 
@@ -562,7 +573,11 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
             // clearInterval(intervall);
             window.removeEventListener("keydown", movePlayer);
             window.removeEventListener("keyup", stopMovingPlayer);
-            removeHandleGamePad(gamePadHandler);
+            if (animationFrame) {
+                cancelAnimationFrame(animationFrame);
+            }
+            removeGamePadListener(gamePadHandler, padIndex);
+            isSpawningBubble = false;
         };
     }, []);
 

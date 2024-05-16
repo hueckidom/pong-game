@@ -1,20 +1,40 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getScores, saveScore } from "../utils/scores";
-import { addHandleGamePad, isDownPressed, isLeftPressed, isRightPressed, isUpPressed, removeHandleGamePad } from "../utils/gamepad";
+import { addGamePadListener, isDownPressed, isLeftPressed, isRightPressed, isUpPressed, removeGamePadListener } from "../utils/gamepad";
 import { gamepad } from "../utils/types";
 
+const state = {
+    currentLetter: 'a',
+    activeIndex: 0,
+    teamname: '',
+    score: 0,
+};
 
 const EnterScore: React.FC = () => {
     const [teamName, setTeamName] = useState('');
     const [currentLetter, setCurrentLetter] = useState('a');
     const [activeIndex, setActiveIndex] = useState(0); // 0: Letter, 1: Remove, 2: Confirm
     const [score, setScore] = useState<number>(0);
-    const currentScores = getScores();
-    const scoreNotAtTopTen = currentScores.length < 10 || currentScores[currentScores.length - 1].score < score;
+    const [isError, setIsError] = useState(false);
+
+    const scoreAtTopTen = () => {
+        const currentScores = getScores();
+        const query = new URLSearchParams(location.search);
+        const scoreParam = query.get('score');
+        const scorePkt = parseInt(scoreParam || '0', 10);
+        return currentScores.length < 10 || currentScores[currentScores.length - 1].score < scorePkt;
+    }
 
     const navigate = useNavigate();
     const location = useLocation();
+
+    useEffect(() => {
+        state.currentLetter = currentLetter;
+        state.activeIndex = activeIndex;
+        state.teamname = teamName;
+        state.score = score;
+    }, [activeIndex, currentLetter, teamName, score]);
 
     useEffect(() => {
 
@@ -22,25 +42,26 @@ const EnterScore: React.FC = () => {
         const scoreParam = query.get('score');
         const scorePkt = parseInt(scoreParam || '0', 10);
 
-
         const handleKeyPress = (event: KeyboardEvent) => {
-            if (!scoreNotAtTopTen) {
+            if (!scoreAtTopTen()) {
                 handleSpace();
                 return
             };
 
             switch (event.key) {
                 case 'ArrowLeft':
-                    if (activeIndex === 0) updateCurrentLetter(-1);
+                    if (state.activeIndex === 0) updateCurrentLetter(-1);
                     break;
                 case 'ArrowRight':
-                    if (activeIndex === 0) updateCurrentLetter(1);
+                    if (state.activeIndex === 0) updateCurrentLetter(1);
                     break;
                 case 'ArrowUp':
-                    setActiveIndex(prev => (prev > 0 ? prev - 1 : 0));
+                    const newIndex = state.activeIndex === 0 ? 2 : state.activeIndex - 1;
+                    setActiveIndex(newIndex);
                     break;
                 case 'ArrowDown':
-                    setActiveIndex(prev => (prev < 2 ? prev + 1 : 2));
+                    const newIndexD = state.activeIndex === 2 ? 0 : state.activeIndex + 1;
+                    setActiveIndex(newIndexD);
                     break;
                 case ' ':
                     handleSpace();
@@ -52,33 +73,37 @@ const EnterScore: React.FC = () => {
 
         window.addEventListener('keydown', handleKeyPress);
 
-        const gamePadHandler = addHandleGamePad((input: gamepad) => {
+        const gamePadhandler = (input: gamepad) => {
             if (input.type === 'button' && input.pressed) {
                 handleSpace();
                 return;
             }
 
-            if (!scoreNotAtTopTen) {
+            if (!scoreAtTopTen()) {
                 return
             };
 
             if (isDownPressed(input)) {
-                setActiveIndex(prev => (prev > 0 ? prev - 1 : 0));
+                const newIndex = state.activeIndex === 0 ? 2 : state.activeIndex - 1;
+                setActiveIndex(newIndex);
             }
 
             if (isUpPressed(input)) {
-                setActiveIndex(prev => (prev < 2 ? prev + 1 : 2));
+                const newIndex = state.activeIndex === 2 ? 0 : state.activeIndex + 1;
+                setActiveIndex(newIndex);
             }
 
             if (isLeftPressed(input)) {
-                if (activeIndex === 0) updateCurrentLetter(-1);
+                if (state.activeIndex === 0) updateCurrentLetter(-1);
             }
 
             if (isRightPressed(input)) {
-                if (activeIndex === 0) updateCurrentLetter(1);
+                if (state.activeIndex === 0) updateCurrentLetter(1);
             }
 
-        });
+        };
+
+        const padIndex = addGamePadListener(gamePadhandler);
 
         if (scoreParam) {
             setScore(scorePkt);
@@ -86,12 +111,12 @@ const EnterScore: React.FC = () => {
 
         return () => {
             window.removeEventListener('keydown', handleKeyPress);
-            removeHandleGamePad(gamePadHandler);
+            removeGamePadListener(gamePadhandler, padIndex);
         };
-    }, [currentLetter, activeIndex]);
+    }, []);
 
     const updateCurrentLetter = (direction: number) => {
-        let currentCharCode = currentLetter.charCodeAt(0);
+        let currentCharCode = state.currentLetter.charCodeAt(0);
         if (direction === 1 && currentCharCode === 90) {
             currentCharCode = 65;
         } else if (direction === -1 && currentCharCode === 65) {
@@ -103,35 +128,36 @@ const EnterScore: React.FC = () => {
     };
 
     const handleSpace = () => {
-
-        if (!scoreNotAtTopTen) {
+        if (!scoreAtTopTen()) {
             setTimeout(() => {
                 navigate('/scores');
             }, 200);
             return;
         };
 
-        if (activeIndex === 0) {
+        if (state.activeIndex === 0) {
             addLetter();
-        } else if (activeIndex === 1) {
+        } else if (state.activeIndex === 1) {
             removeLastLetter();
-        } else if (activeIndex === 2) {
+        } else if (state.activeIndex === 2) {
             confirmName();
         }
     };
 
     const addLetter = () => {
-        setTeamName(prev => prev + currentLetter);
+        const newName = state.teamname + state.currentLetter;
+        setTeamName(newName);
     };
 
     const removeLastLetter = () => {
-        setTeamName(prev => prev.slice(0, -1));
+        const newName = state.teamname.slice(0, -1);
+        setTeamName(newName);
     };
 
     const confirmName = () => {
-        if (teamName.length === 0) return;
+        if (state.teamname.length === 0) return;
 
-        saveScore(score, teamName);
+        saveScore(state.score, state.teamname);
         setTimeout(() => {
             navigate('/scores');
         }, 200)
@@ -139,7 +165,7 @@ const EnterScore: React.FC = () => {
 
     return (
         <>
-            {!scoreNotAtTopTen && <div className="hero min-h-screen bg-base-200">
+            {!scoreAtTopTen() && <div className="hero min-h-screen bg-base-200">
                 <div className="hero-content text-center flex-col gap-4">
                     <div className="text-4xl">Euer score: {score}</div>
                     <div className="text-3xl">Ihr seid leider keine Top Heros</div>
@@ -150,7 +176,7 @@ const EnterScore: React.FC = () => {
                 </div>
             </div>}
 
-            {scoreNotAtTopTen && <div className="hero min-h-screen bg-base-200">
+            {scoreAtTopTen() && <div className="hero min-h-screen bg-base-200">
                 <div className="hero-content text-left flex-col">
                     <div className="text-5xl ">Euer score: {score}</div>
                     <div className="text-center">
@@ -172,6 +198,10 @@ const EnterScore: React.FC = () => {
                                 <div className={(activeIndex === 2 ? "bg-primary" : "") + " kbd"} onClick={confirmName}>
                                     Bestätigen
                                 </div>
+                            </div>
+                            <div className="text-center">
+                                {isError && <div className="text-red-500">Bitte gib einen Namen ein</div>}
+
                             </div>
                         </div>
                     </div>

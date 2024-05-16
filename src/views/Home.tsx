@@ -5,8 +5,12 @@ import { useNavigate } from 'react-router-dom'
 import backgroundMusic from '../assets/game.mp3'
 import valuehero from '../assets/valuehero.png'
 import AudioComponent from '../components/Audio'
-import { addHandleGamePad, isDownPressed, isUpPressed, removeHandleGamePad } from '../utils/gamepad'
+import { addGamePadListener, isDownPressed, isUpPressed, removeGamePadListener } from '../utils/gamepad'
+import { gameDefaults } from "./Game"
 
+const state: any = {
+  activeIndex: 0
+}
 const Home: React.FC<HomeProps> = ({ }) => {
   const [activeIndex, setActiveIndex] = useState(0)
   const navigate = useNavigate()
@@ -23,11 +27,12 @@ const Home: React.FC<HomeProps> = ({ }) => {
 
   const playSound = () => {
     const audio = new Audio(buttonClickSound)
+    audio.volume = gameDefaults.volume;
     audio.play()
   }
 
   const handlePress = () => {
-    switch (activeIndex) {
+    switch (state.activeIndex) {
       case 0:
         goToGame()
         break
@@ -40,6 +45,10 @@ const Home: React.FC<HomeProps> = ({ }) => {
   }
 
   useEffect(() => {
+    state.activeIndex = activeIndex
+  }, [activeIndex])
+
+  useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       event.preventDefault()
       event.stopPropagation()
@@ -47,10 +56,12 @@ const Home: React.FC<HomeProps> = ({ }) => {
 
       switch (event.key) {
         case 'ArrowUp':
-          setActiveIndex((prev) => (prev + 1) % 2)
+          const newIndex = state.activeIndex > 0 ? state.activeIndex - 1 : 0;
+          setActiveIndex(newIndex);
           break
         case 'ArrowDown':
-          setActiveIndex((prev) => (prev + 1) % 2)
+          const newIndexD = state.activeIndex < 1 ? state.activeIndex + 1 : 1;
+          setActiveIndex(newIndexD);
           break
         case ' ':
           handlePress()
@@ -62,26 +73,30 @@ const Home: React.FC<HomeProps> = ({ }) => {
 
     window.addEventListener('keydown', handleKeyPress)
 
-    const gamePadHandler = addHandleGamePad((input: gamepad) => {
+
+    const handleGamepad = (input: gamepad) => {
       if (input.type === 'button' && input.pressed) {
         handlePress();
         return;
       }
 
       if (isDownPressed(input)) {
-        setActiveIndex((prev) => (prev + 1) % 2)
+        const newIndex = state.activeIndex > 0 ? state.activeIndex - 1 : 0;
+        setActiveIndex(newIndex)
       }
 
       if (isUpPressed(input)) {
-        setActiveIndex((prev) => (prev + 1) % 2)
+        const newIndexD = state.activeIndex < 1 ? state.activeIndex + 1 : 1;
+        setActiveIndex(newIndexD)
       }
-    });
+    };
 
+    const padIndex = addGamePadListener(handleGamepad);
     return () => {
       window.removeEventListener('keydown', handleKeyPress);
-      removeHandleGamePad(gamePadHandler);
+      removeGamePadListener(handleGamepad, padIndex);
     }
-  }, [activeIndex])
+  }, [])
 
   return (
     <>
@@ -115,6 +130,7 @@ const Home: React.FC<HomeProps> = ({ }) => {
             </div>
           </div>
         </div>
+        {/* {questions && <QuestionDialogCmp correct={() => { console.log("test") }} value="Verbundenheit" wrong={() => { }} />} */}
         <AudioComponent
           onAudioEnd={() => { }}
           path={backgroundMusic}
