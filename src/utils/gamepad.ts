@@ -71,7 +71,7 @@ export const removeHandleGamePad = (intervalId: number) => {
 }
 
 export const isPressReleased = (input: gamepad) => {
-    return input.index == 0 && input.isRelease;
+    return input.index == 1 && input.isRelease;
 }
 
 export const isDownPressed = (input: gamepad) => {
