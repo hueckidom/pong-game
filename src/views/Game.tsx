@@ -36,15 +36,17 @@ export let gameDefaults: BaseSettings = {
     boardHeightDivisor: 1.7,
     maxBoardWidth: 700,
     maxLife: 2,
-    maxVelocityX: 5,
-    moveSpeed: 5,
+    maxVelocityX: 7,
+    moveSpeed: 6,
     playerHeight: 60,
     playerWidth: 10,
     key2Down: "s",
     key2Up: "w",
     keyDown: "ArrowDown",
     keyUp: "ArrowUp",
-    volume: 0.2,
+    volume: 0.06,
+    questionSeconds: 20,
+    pushInterval: 110,
 }
 
 export const assignGameDefaults = (settings: BaseSettings) => {
@@ -139,7 +141,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
     const [backgroundAudio] = useState(new Audio(backgroundMusic));
 
     useEffect(() => {
-        backgroundAudio.volume = 0.1;
+        backgroundAudio.volume = 0.07;
         backgroundAudio.play();
 
         return () => {

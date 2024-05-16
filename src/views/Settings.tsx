@@ -69,6 +69,18 @@ const Settings: React.FC = () => {
                         <label className="label">Speed Increment</label>
                         <input type="number" value={settings.velocityXIncrement} onChange={(e) => updateSetting('velocityXIncrement', e.target.value)} />
                     </div>
+                    <div>
+                        <label className="label">Push intervall</label>
+                        <input type="number" value={settings.pushInterval} onChange={(e) => updateSetting('pushInterval', e.target.value)} />
+                    </div>
+                    <div>
+                        <label className="label">QuestionSeconds</label>
+                        <input type="number" value={settings.questionSeconds} onChange={(e) => updateSetting('questionSeconds', e.target.value)} />
+                    </div>
+                    <div>
+                        <label className="label">Volume</label>
+                        <input type="number" value={settings.volume} onChange={(e) => updateSetting('volume', e.target.value)} />
+                    </div>
                 </div>
             </div>
         </div>

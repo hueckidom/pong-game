@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Question, QuestionDialogProps, gamepad } from "../utils/types";
 import questions from "../assets/questions.json";
 import { addHandleGamePad, isDownPressed, isUpPressed, removeHandleGamePad } from "../utils/gamepad";
+import { gameDefaults } from "../views/Game";
 
 const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
     value,
@@ -10,7 +11,7 @@ const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
 }) => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [question, setQuestion] = useState<Question | undefined>(undefined);
-    const [timer, setTimer] = useState(15);
+    const [timer, setTimer] = useState(gameDefaults.questionSeconds);
     let timeout: any;
 
     useEffect(() => {

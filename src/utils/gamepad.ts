@@ -1,3 +1,4 @@
+import { gameDefaults } from "../views/Game";
 import { gamepad } from './types';
 
 
@@ -60,7 +61,7 @@ export const addHandleGamePad = (handleInput: any) => {
         }
     };
 
-    intervalId = window.setInterval(handleGamePadInput, 120);
+    intervalId = window.setInterval(handleGamePadInput, gameDefaults.pushInterval);
     return intervalId;
 };
 

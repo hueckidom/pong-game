@@ -83,4 +83,6 @@ export interface BaseSettings {
     key2Up: string;
     key2Down: string;
     volume: number;	
+    questionSeconds: number;
+    pushInterval: number;
 }
