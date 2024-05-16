@@ -66,20 +66,8 @@ const Settings: React.FC = () => {
                         <input type="number" value={settings.maxBoardWidth} onChange={(e) => updateSetting('maxBoardWidth', e.target.value)} />
                     </div>
                     <div>
-                        <label className="label">Key Up</label>
-                        <input type="text" value={settings.keyUp} onChange={(e) => updateSetting('keyUp', e.target.value)} />
-                    </div>
-                    <div>
-                        <label className="label">Key Down</label>
-                        <input type="text" value={settings.keyDown} onChange={(e) => updateSetting('keyDown', e.target.value)} />
-                    </div>
-                    <div>
-                        <label className="label">Key 2 Up</label>
-                        <input type="text" value={settings.key2Up} onChange={(e) => updateSetting('key2Up', e.target.value)} />
-                    </div>
-                    <div>
-                        <label className="label">Key 2 Down</label>
-                        <input type="text" value={settings.key2Down} onChange={(e) => updateSetting('key2Down', e.target.value)} />
+                        <label className="label">Speed Increment</label>
+                        <input type="number" value={settings.velocityXIncrement} onChange={(e) => updateSetting('velocityXIncrement', e.target.value)} />
                     </div>
                 </div>
             </div>

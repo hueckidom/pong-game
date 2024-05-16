@@ -30,7 +30,7 @@ let setValue: values = "Vertrauen";
 let tGameEffect = "none";
 
 export let gameDefaults: BaseSettings = {
-    velocityXIncrement: 1.15,
+    velocityXIncrement: 1.2,
     baseVelocityX: 1.5,
     baseVelocityY: 1.50,
     boardHeightDivisor: 1.7,
@@ -274,7 +274,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
         if (life <= 0) {
             // navigate('/enter-score?score=' + score.current);
             // use window.location.href instead of navigate to avoid the page transition
-            window.location.href = '/#/ enter-score?score=' + score.current;
+            window.location.href = '/#/enter-score?score=' + score.current;
         }
     }, [life]);
 
@@ -576,7 +576,6 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
                 <span className="opacity-75">hoch!</span>
             </div>
             {/* Game board  */}
-            {gameEffect}
             <div className={(gameEffect == "shake" ? "shake-effect" : "") + (gameEffect == "blackout" ? "blackout-effect" : "") + " gradient-border"}>
                 <canvas className={" bg-base-300 mt-10 m-auto shadow-lg"} id="board"></canvas>
             </div>
