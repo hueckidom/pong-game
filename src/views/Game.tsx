@@ -36,7 +36,7 @@ export let gameDefaults: BaseSettings = {
     boardHeightDivisor: 1.7,
     maxBoardWidth: 700,
     maxLife: 2,
-    maxVelocityX: 4,
+    maxVelocityX: 5,
     moveSpeed: 5,
     playerHeight: 60,
     playerWidth: 10,
@@ -62,8 +62,8 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
     let moveSpeed = Number(gameDefaults.moveSpeed);
     let maxVelocity = Number(gameDefaults.maxVelocityX);
     let maxLife = gameDefaults.maxLife;
-    let valueQue: values[] = ["Vertrauen", "Bodenständigkeit", "Leistung", "Respekt", "Verbundenheit"];
-    const [gameEffect, setGameEffect] = useState<"shake" | "smallerPad" | "blackout" | "none" | "velocityYChange">("blackout");
+    let valueQue: values[] = ["Vertrauen", "Bodenständigkeit", "Leistung", "Verbundenheit", "Respekt"];
+    const [gameEffect, setGameEffect] = useState<"shake" | "smallerPad" | "blackout" | "none" | "velocityYChange">("none");
 
     let player1: player = {
         x: 2,
@@ -159,7 +159,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
     };
 
     const startBubbleTimer = () => {
-        const spawnInterval = Math.random() * 5000 + (14000);
+        const spawnInterval = Math.random() * 5000 + (12000);
         setTimeout(spawnBubble, spawnInterval);
     };
 
@@ -271,8 +271,10 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
     };
 
     useEffect(() => {
-        if (life === 0) {
-            navigate('/enter-score?score=' + score.current);
+        if (life <= 0) {
+            // navigate('/enter-score?score=' + score.current);
+            // use window.location.href instead of navigate to avoid the page transition
+            window.location.href = '/#/ enter-score?score=' + score.current;
         }
     }, [life]);
 
@@ -282,7 +284,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
         //set the game effect based on the value
         switch (currentValue) {
             case "Bodenständigkeit":
-                setGameEffect("velocityYChange");
+                setGameEffect("shake");
                 break;
             case "Leistung":
                 setGameEffect("smallerPad");
@@ -574,7 +576,8 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
                 <span className="opacity-75">hoch!</span>
             </div>
             {/* Game board  */}
-            <div className={(gameEffect === "shake" ? "shake-effect" : "") + gameEffect === "blackout" ? "blackout-effect" : "" + " gradient-border"}>
+            {gameEffect}
+            <div className={(gameEffect == "shake" ? "shake-effect" : "") + (gameEffect == "blackout" ? "blackout-effect" : "") + " gradient-border"}>
                 <canvas className={" bg-base-300 mt-10 m-auto shadow-lg"} id="board"></canvas>
             </div>
             {/* Score */}
