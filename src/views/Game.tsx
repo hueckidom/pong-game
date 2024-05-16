@@ -372,7 +372,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
                 }
 
                 if (tGameEffect === "velocityYChange") {
-                    ball.velocityY = 2;
+                    ball.velocityY = (Math.random() * 3 + 1.5);
                 }
 
                 score.current += timeRef.current;
@@ -385,7 +385,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
                 }
 
                 if (tGameEffect === "velocityYChange") {
-                    ball.velocityY = -2;
+                    ball.velocityY = -(Math.random() * 3 + 1.5);
                 }
 
                 score.current += timeRef.current;
