@@ -75,17 +75,17 @@ export const isPressReleased = (input: gamepad) => {
 }
 
 export const isDownPressed = (input: gamepad) => {
-    return input.index == 0 && input.value == 1;
-}
-
-export const isUpPressed = (input: gamepad) => {
-    return input.index == 0 && input.value == -1;
-}
-
-export const isLeftPressed = (input: gamepad) => {
     return input.index == 1 && input.value == -1;
 }
 
-export const isRightPressed = (input: gamepad) => {
+export const isUpPressed = (input: gamepad) => {
     return input.index == 1 && input.value == 1;
+}
+
+export const isLeftPressed = (input: gamepad) => {
+    return input.index == 0 && input.value == 1;
+}
+
+export const isRightPressed = (input: gamepad) => {
+    return input.index == 0 && input.value == -1;
 }
