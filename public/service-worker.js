@@ -23,6 +23,7 @@ self.addEventListener('install', function (event) {
         '/button-click-sound.mp3',
         '/game.mp3',
         '/goal.mp3',
+        '/home.mp3',
         '/Paddle Ball Hit Sound Effect HD.mp3',
         '/questions.mp3',
         '/wrong.mp3',
@@ -41,7 +42,6 @@ self.addEventListener('fetch', event => {
         if (response) {
           return response;
         }
-        return fetch(event.request).catch(() => caches.match('/offline.html'));
       })
   );
 });
