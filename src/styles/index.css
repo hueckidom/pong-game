@@ -164,7 +164,7 @@ body {
     width: 20px;
 }
 .kave-btn.active .kave-line:before {
-    bottom: 0;
+    bottom: 10px;
 }
 .kave-btn.active .kave-line:after {
     top: 10px;
