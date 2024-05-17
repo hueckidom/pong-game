@@ -47,7 +47,7 @@ const ShowScores: React.FC = () => {
 
                 <div className="title-wrapper mb-12 floating">
                     <h1 className="sweet-title">
-                        <span data-text="Top-Heros">Top-Heros</span>
+                        <span data-text="Bestenliste">Bestenliste</span>
                     </h1>
                 </div>
 
@@ -57,7 +57,7 @@ const ShowScores: React.FC = () => {
                             <tr>
                                 <th>#</th>
                                 <th>Team</th>
-                                <th>Score</th>
+                                <th>Punkte</th>
                             </tr>
                         </thead>
                         <tbody className="text-xl">

@@ -170,18 +170,18 @@ const EnterScore: React.FC = () => {
         <>
             {!scoreAtTopTen() && <div className="hero min-h-screen bg-base-200">
                 <div className="hero-content text-center flex-col gap-4">
-                    <div className="text-4xl">Euer score: {score}</div>
-                    <div className="text-3xl">Ihr seid leider keine Top Heros</div>
-                    <div className="text-5xl">...</div>
-                    <div className={(activeIndex === 0 ? "bg-primary" : "") + " kbd"} onClick={confirmName}>
-                        Na, gut...
+                    <div className="text-4xl">Punkte: {score}</div>
+                    <div className="text-2xl">Leider habt ihr es nicht auf die Bestenliste geschafft</div>
+                    <div className="text-3xl">...</div>
+                    <div className={(activeIndex === 0 ? "bg-primary" : "") + " kbd mt-2"} onClick={confirmName}>
+                        Auf ein Neues!
                     </div>
                 </div>
             </div>}
 
             {scoreAtTopTen() && <div className="hero min-h-screen bg-base-200">
                 <div className="hero-content text-left flex-col">
-                    <div className="text-5xl ">Euer score: {score}</div>
+                    <div className="text-5xl ">Punkte: {score}</div>
                     <div className="text-center">
                         <div className="flex gap-2 justify-center text-2xl ">
                             <span>Euer Team Name: </span>

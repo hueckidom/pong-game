@@ -3,10 +3,14 @@ import { Question, QuestionDialogProps, gamepad } from "../utils/types";
 import questions from "../assets/questions.json";
 import { addGamePadListener, isDownPressed, isUpPressed, removeGamePadListener } from "../utils/gamepad";
 import { gameDefaults } from "../views/Game";
+import correctSound from "../assets/correct.mp3";
+import wrongSound from "../assets/wrong.mp3";
+import { playSound } from "../utils/board";
 
 const state: any = {
     question: undefined,
-    activeIndex: 0
+    activeIndex: 0,
+    isDone: false,
 };
 
 const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
@@ -16,6 +20,8 @@ const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
 }) => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [question, setQuestion] = useState<Question | undefined>(undefined);
+    const [isWrong, setIsWrong] = useState(false);
+    const [isCorrect, setIsCorrect] = useState(false);
     const [timer, setTimer] = useState(gameDefaults.questionSeconds);
     let timeout: any;
 
@@ -24,7 +30,7 @@ const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
             timeout = setTimeout(() => setTimer(timer - 1), 1000);
             return () => clearTimeout(timeout);
         } else {
-            wrong();
+            hasWrong();
         }
 
         return () => {
@@ -52,11 +58,33 @@ const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
     const handleSpace = () => {
         const answerToIndex = indexToAlpha(state.activeIndex);
         if (answerToIndex == state?.question?.answer) {
-            correct();
+            hasCorrect();
         } else {
-            wrong();
+            hasWrong();
         }
+
+        clearTimeout(timeout);
     };
+
+    function hasWrong() {
+        if (state.isDone) return;
+
+        state.isDone = true;
+        playSound(wrongSound);
+        setIsWrong(true);
+        setTimeout(() => {
+            wrong();
+        }, 2000);
+    }
+
+    function hasCorrect() {
+        state.isDone = true;
+        playSound(correctSound);
+        setIsCorrect(true);
+        setTimeout(() => {
+            correct();
+        }, 2000);
+    }
 
     useEffect(() => {
         state.activeIndex = activeIndex;
@@ -69,6 +97,7 @@ const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
         // const allQuestions = [...questionToCategory, ...randoms];
         const randomQuestion: Question = questions[Math.floor(Math.random() * questions.length)];
         setQuestion(randomQuestion);
+        state.isDone = false;
 
         const handleKeyPress = (event: KeyboardEvent) => {
             event.preventDefault();
@@ -106,7 +135,6 @@ const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
 
             if (isUpPressed(input)) {
                 const newIndexD = state.activeIndex < 3 ? state.activeIndex + 1 : 3;
-                console.log('newIndexD', newIndexD);
                 setActiveIndex(newIndexD);
             }
         };
@@ -122,18 +150,29 @@ const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
     return (
         <div className="hero min-h-screen bg-base-300 fixed z-20 top-0 opacity-95 backdrop-blur-md">
             <div className="hero-content text-left flex-col px-4">
-                <div className="title-wrapper mb-8 floating">
+                {!isWrong && !isCorrect && <><div className="title-wrapper mb-8 floating">
                     <h1 className="sweet-title sweet-title-mixed game-title">
                         <span data-text={timer}>{timer}</span>
                     </h1>
                 </div>
-                <div className="text-2xl font-bold">{question?.question}</div>
-                <div className="flex flex-col gap-2">
-                    <div className={`kbd w-full text-xl ${activeIndex === 0 ? 'bg-primary' : ''}`}>{question?.A}</div>
-                    <div className={`kbd text-xl ${activeIndex === 1 ? 'bg-primary' : ''}`}>{question?.B}</div>
-                    <div className={`kbd text-xl ${activeIndex === 2 ? 'bg-primary' : ''}`}>{question?.C}</div>
-                    <div className={`kbd text-xl ${activeIndex === 3 ? 'bg-primary' : ''}`}>{question?.D}</div>
-                </div>
+                    <div className="text-2xl font-bold">{question?.question}</div>
+                    <div className="flex flex-col gap-2">
+                        <div className={`kbd w-full text-xl ${activeIndex === 0 ? 'bg-primary' : ''}`}>{question?.A}</div>
+                        <div className={`kbd text-xl ${activeIndex === 1 ? 'bg-primary' : ''}`}>{question?.B}</div>
+                        <div className={`kbd text-xl ${activeIndex === 2 ? 'bg-primary' : ''}`}>{question?.C}</div>
+                        <div className={`kbd text-xl ${activeIndex === 3 ? 'bg-primary' : ''}`}>{question?.D}</div>
+                    </div></>}
+
+                {isWrong && <><div className="title-wrapper mb-8 splash-in">
+                    <h1 className="sweet-title sweet-title-red">
+                        <span data-text={"Falsch..."}>{"Falsch..."}</span>
+                    </h1>
+                </div> </>}
+                {isCorrect && <><div className="title-wrapper mb-8 splash-in">
+                    <h1 className="sweet-title sweet-title-green">
+                        <span data-text={"Richtig!"}>{"Richtig!"}</span>
+                    </h1>
+                </div> </>}
             </div>
         </div>
     );

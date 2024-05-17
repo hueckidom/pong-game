@@ -92,7 +92,7 @@
     {
         "question": "Welcher Wert ist nicht Teil unserer Werteblüte?",
         "A": "Leistung",
-        "B": "Lebhaftigkeit",
+        "B": "Bodenständigkeit",
         "C": "Begeisterung",
         "D": "Respekt",
         "answer": "C",
@@ -103,17 +103,17 @@
         "A": "Bodenständigkeit",
         "B": "Enkelfähigkeit",
         "C": "Respekt",
-        "D": "Ehrlichkeit",
-        "answer": "C",
+        "D": "Leistung",
+        "answer": "B",
         "category": "Random"
     },
     {
         "question": "Welcher Wert ist nicht Teil unserer Werteblüte?",
         "A": "Leistung",
-        "B": "Gemeinsamkeit",
+        "B": "Respekt",
         "C": "Vertrauen",
         "D": "Zusammenhalt",
-        "answer": "C",
+        "answer": "D",
         "category": "Random"
     },
     {
@@ -122,7 +122,7 @@
         "B": "Vertrauen ",
         "C": "Respekt",
         "D": "Entschlossenheit",
-        "answer": "A",
+        "answer": "D",
         "category": "Random"
     },
     {

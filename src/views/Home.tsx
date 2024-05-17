@@ -4,15 +4,18 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import backgroundMusic from '../assets/game.mp3'
 import valuehero from '../assets/valuehero.png'
+import valuehero2 from '../assets/valuehero2.png'
 import AudioComponent from '../components/Audio'
-import { addGamePadListener, isDownPressed, isUpPressed, removeGamePadListener } from '../utils/gamepad'
+import { addGamePadListener, isDownPressed, isLeftPressed, isRightPressed, isUpPressed, removeGamePadListener } from '../utils/gamepad'
 import { gameDefaults } from "./Game"
 
 const state: any = {
-  activeIndex: 0
+  activeIndex: 0,
+  gameMode: 0
 }
 const Home: React.FC<HomeProps> = ({ }) => {
   const [activeIndex, setActiveIndex] = useState(0)
+  const [gameMode, setGameMode] = useState(localStorage.getItem('gameMode') ? parseInt(localStorage.getItem('gameMode') || '0') : 0)
   const navigate = useNavigate()
 
   const goToGame = (): void => {
@@ -45,8 +48,11 @@ const Home: React.FC<HomeProps> = ({ }) => {
   }
 
   useEffect(() => {
-    state.activeIndex = activeIndex
-  }, [activeIndex])
+    state.activeIndex = activeIndex;
+    state.gameMode = gameMode;
+
+    localStorage.setItem('gameMode', gameMode.toString())
+  }, [activeIndex, gameMode])
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
@@ -63,6 +69,10 @@ const Home: React.FC<HomeProps> = ({ }) => {
           const newIndexD = state.activeIndex < 1 ? state.activeIndex + 1 : 1;
           setActiveIndex(newIndexD);
           break
+        case "ArrowRight":
+          const newIndexR = state.gameMode == 0 ? state.gameMode + 1 : 0;
+          setGameMode(newIndexR)
+          break;
         case ' ':
           handlePress()
           break
@@ -89,6 +99,16 @@ const Home: React.FC<HomeProps> = ({ }) => {
         const newIndexD = state.activeIndex < 1 ? state.activeIndex + 1 : 1;
         setActiveIndex(newIndexD)
       }
+
+      if (isRightPressed(input)) {
+        const newIndexR = state.gameMode == 0 ? state.gameMode + 1 : 0;
+        setGameMode(newIndexR)
+      }
+
+      if (isLeftPressed(input)) {
+        const newIndexR = state.gameMode == 1 ? state.gameMode - 1 : 0;
+        setGameMode(newIndexR)
+      }
     };
 
     const padIndex = addGamePadListener(handleGamepad);
@@ -106,9 +126,9 @@ const Home: React.FC<HomeProps> = ({ }) => {
           <div className="">
             <div className="title-wrapper mb-8 floating">
               <div className="fixed w-full hero-img mb-20">
-                <img className="w-2/4 max-w-96 opacity-75" src={valuehero} />
+                <img className="w-2/4 max-w-72 opacity-75" src={gameMode == 0 ? valuehero2 : valuehero} />
               </div>
-              <h1 className="sweet-title sweet-title-mixed">
+              <h1 className={(gameMode == 0 ? "sweet-title-purple" : "sweet-title-mixed") + " sweet-title "}>
                 <span data-text="#ValueHero">#ValueHero</span>
               </h1>
             </div>
@@ -125,12 +145,12 @@ const Home: React.FC<HomeProps> = ({ }) => {
                 className={(activeIndex === 1 ? 'active' : '') + ' kave-btn'}
               >
                 <span className="kave-line"></span>
-                Highscore
+                Bestenliste
               </button>
             </div>
           </div>
         </div>
-        {/* {questions && <QuestionDialogCmp correct={() => { console.log("test") }} value="Verbundenheit" wrong={() => { }} />} */}
+        {/* <QuestionDialogCmp correct={() => { console.log("test") }} value="Verbundenheit" wrong={() => { }} /> */}
         <AudioComponent
           onAudioEnd={() => { }}
           path={backgroundMusic}

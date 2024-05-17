@@ -9,6 +9,10 @@ self.addEventListener('install', function (event) {
         '/index.css',
         '/index.js',
         '/favicon.ico',
+        '/v.png',
+        '/l.png',
+        '/vbh.png',
+        '/r.png',
         '/logo192.png',
         '/logo512.png',
         '/manifest.json',
@@ -20,7 +24,8 @@ self.addEventListener('install', function (event) {
         '/questions.mp3',
         '/wrong.mp3',
         '/correct.mp3',
-        '/valuehero.png'
+        '/valuehero.png',
+        '/valuehero2.png'
       ]);
     })
   );

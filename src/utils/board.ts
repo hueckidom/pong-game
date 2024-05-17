@@ -9,3 +9,10 @@ export const determineBoardWidth = () => {
 
     return width;
 }
+
+export const playSound = (src: string, volume = gameDefaults.volume) => {
+    const audio = new Audio(src);
+    audio.play();
+    audio.loop = false;
+    audio.volume = volume;
+}
