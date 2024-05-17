@@ -173,6 +173,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
     }
 
     const handleCorrectAnswer = () => {
+        isSpawningBubble = false;
         score.current += timeRef.current;
         nextValue();
         setIsQuestion(false);
@@ -180,12 +181,12 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
         setTimeout(() => {
             triggerPause();
             bubble = null;
-            isSpawningBubble = false;
             startBubbleTimer();
         }, 250);
     }
 
     const handleWrongAnswer = () => {
+        isSpawningBubble = false;
         setIsQuestion(false);
         nextValue();
 
@@ -193,7 +194,6 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
             triggerPause();
             bubble = null;
             startBubbleTimer();
-            isSpawningBubble = false;
             setLife((prevLife) => prevLife - 1);
         }, 250);
     }
