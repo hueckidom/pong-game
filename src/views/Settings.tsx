@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { assignGameDefaults, gameDefaults } from "./Game";
+import Cookies from 'js-cookie';
 
 const Settings: React.FC = () => {
     const [settings, setSettings] = useState<any>({});
@@ -9,7 +10,7 @@ const Settings: React.FC = () => {
     }
 
     useEffect(() => {
-        const settings = localStorage.getItem('settings');
+        const settings = Cookies.get('settings');
         if (settings) {
             setSettings(JSON.parse(settings));
         } else {
@@ -19,7 +20,7 @@ const Settings: React.FC = () => {
 
     useEffect(() => {
         if (Object.keys(settings).length === 0) return;
-        localStorage.setItem('settings', JSON.stringify(settings));
+        Cookies.set('settings', JSON.stringify(settings), { expires: 365 });
 
         assignGameDefaults(settings);
     }, [settings]);

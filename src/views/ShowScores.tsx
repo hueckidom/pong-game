@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Score, gamepad } from "../utils/types";
 import { addGamePadListener, removeGamePadListener } from "../utils/gamepad";
+import { getScores } from "../utils/scores";
 
 const ShowScores: React.FC = () => {
     const [highscores, setHighscores] = useState<Score[]>([]);
@@ -17,10 +18,8 @@ const ShowScores: React.FC = () => {
     }
 
     useEffect(() => {
-        const scores = localStorage.getItem('highscores');
-        if (scores) {
-            setHighscores(JSON.parse(scores));
-        }
+        const scores = getScores();
+        setHighscores(scores);
 
         window.addEventListener("keydown", handleKeyPress);
 

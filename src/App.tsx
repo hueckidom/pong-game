@@ -5,6 +5,8 @@ import Home from "./views/Home";
 import Highscore from "./views/EnterScore";
 import ShowScores from "./views/ShowScores";
 import Settings from "./views/Settings";
+import Cookies from 'js-cookie';
+
 
 const App = () => {
     const [settings] = useState({
@@ -13,9 +15,9 @@ const App = () => {
     });
 
     useEffect(() => {
-        const defaults = localStorage.getItem('settings');
-        if (defaults) {
-            assignGameDefaults(JSON.parse(defaults));
+        const settings = Cookies.get('settings');
+        if (settings) {
+            assignGameDefaults(JSON.parse(settings));
         }
     }, []);
 

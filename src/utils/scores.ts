@@ -1,7 +1,8 @@
 import { Score } from "./types";
+import Cookies from 'js-cookie';
 
 const getScores = () => {
-    const scores = localStorage.getItem('highscores');
+    const scores = Cookies.get('highscores');
     if (scores) {
         return JSON.parse(scores);
     }
@@ -12,7 +13,7 @@ const saveScore = (score: number, name: string) => {
     const scores = getScores();
     scores.push({ name, score });
     scores.sort((a: Score, b: Score) => b.score - a.score);
-    localStorage.setItem('highscores', JSON.stringify(scores.slice(0, 10)));
+    Cookies.set('highscores', JSON.stringify(scores.slice(0, 10)), { expires: 1365 });
 }
 
 export { getScores, saveScore };
