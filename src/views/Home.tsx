@@ -7,7 +7,7 @@ import valuehero from '../assets/valuehero.png'
 import valuehero2 from '../assets/valuehero2.png'
 import AudioComponent from '../components/Audio'
 import { addGamePadListener, isDownPressed, isLeftPressed, isRightPressed, isUpPressed, removeGamePadListener } from '../utils/gamepad'
-import { gameDefaults } from "./Game"
+import { playSound } from "../utils/board"
 
 const state: any = {
   activeIndex: 0,
@@ -19,19 +19,13 @@ const Home: React.FC<HomeProps> = ({ }) => {
   const navigate = useNavigate()
 
   const goToGame = (): void => {
-    playSound()
+    playSound(buttonClickSound)
     navigate('/game')
   }
 
   const goToHighscore = (): void => {
-    playSound()
+    playSound(buttonClickSound)
     navigate('/scores')
-  }
-
-  const playSound = () => {
-    const audio = new Audio(buttonClickSound)
-    audio.volume = gameDefaults.volume;
-    audio.play()
   }
 
   const handlePress = () => {
@@ -58,7 +52,6 @@ const Home: React.FC<HomeProps> = ({ }) => {
     const handleKeyPress = (event: KeyboardEvent) => {
       event.preventDefault()
       event.stopPropagation()
-      console.log('key', event.key, 'code', event.keyCode)
 
       switch (event.key) {
         case 'ArrowUp':

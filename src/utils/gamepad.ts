@@ -12,7 +12,6 @@ export const addGamePadListener = (callbackFunc: any) => {
     let gamepadIndexActive = [] as number[];
     padListeners.push(callbackFunc);
     const index = Math.random() * 1000000;
-    console.log('addGamePadListener', index);
 
     async function handle(args?: any) {
         if (gamepadIndexActive.includes(args.gamepadIndex)) return;
@@ -99,7 +98,6 @@ export const debounce = <T extends (...args: any[]) => any>(
 };
 
 export const removeGamePadListener = (func: any, index: number) => {
-    console.log('removeGamePadListener', index);
     padListeners.splice(padListeners.indexOf(func), 1);
     if (animationFrameIds[index]) {
         cancelAnimationFrame(animationFrameIds[index]);

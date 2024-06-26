@@ -4,6 +4,7 @@ import { Score, gamepad } from "../utils/types";
 import { addGamePadListener, removeGamePadListener } from "../utils/gamepad";
 import { getScores } from "../utils/scores";
 
+let canGoBack = false;
 const ShowScores: React.FC = () => {
     const [highscores, setHighscores] = useState<Score[]>([]);
     const navigate = useNavigate();
@@ -12,7 +13,7 @@ const ShowScores: React.FC = () => {
         event.preventDefault();
         event.stopPropagation();
 
-        if (event.key === ' ') {
+        if (event.key === ' ' && canGoBack) {
             navigate('/');
         }
     }
@@ -20,11 +21,12 @@ const ShowScores: React.FC = () => {
     useEffect(() => {
         const scores = getScores();
         setHighscores(scores);
+        canGoBack = false;
 
         window.addEventListener("keydown", handleKeyPress);
 
         const gamePadHandler = (input: gamepad) => {
-            if (input.type === 'button' && input.pressed) {
+            if (input.type === 'button' && input.pressed  && canGoBack) {
                 setTimeout(() => {
                     navigate('/');
                 }, 200)
@@ -32,6 +34,10 @@ const ShowScores: React.FC = () => {
             }
         }
         const padIndex = addGamePadListener(gamePadHandler);
+
+        setTimeout(() => {
+            canGoBack = true;
+        }, 500)
 
         return () => {
             window.removeEventListener("keydown", handleKeyPress);
