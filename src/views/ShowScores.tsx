@@ -37,7 +37,7 @@ const ShowScores: React.FC = () => {
 
         setTimeout(() => {
             canGoBack = true;
-        }, 500)
+        }, 200)
 
         return () => {
             window.removeEventListener("keydown", handleKeyPress);

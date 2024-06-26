@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import correctSound from "../assets/correct.mp3";
 import questionSound from "../assets/questions.mp3";
-import wrongSound from "../assets/wrong.mp3";
 import bubblePicture from "../assets/ball.png";
 import BodenStaendigkeitBallImg from "../assets/b.png";
 import LeistungBallImg from "../assets/l.png";
@@ -17,10 +15,9 @@ import {
 } from "../utils/types";
 import hitSound from "../assets/Paddle Ball Hit Sound Effect HD.mp3";
 import goalSound from "../assets/goal.mp3";
-import { useNavigate } from "react-router-dom";
 import backgroundMusic from "../assets/game.mp3";
 import { determineBoardWidth, playSound } from "../utils/board";
-import QuestionDialogCmp from "../components/QuestionDialog";
+import QuestionDialogCmp, { askedQuestionsSet } from "../components/QuestionDialog";
 import { values } from "../utils/options";
 import { addGamePadListener, isDownPressed, isPressReleased, isUpPressed, removeGamePadListener } from "../utils/gamepad";
 
@@ -54,7 +51,6 @@ export const assignGameDefaults = (settings: BaseSettings) => {
 }
 
 let animationFrame: any;
-let isSpawningBubble = false;
 const GameField: React.FC<MultiplePlayerModeProps> = ({
 }) => {
     let boardWidth: number = determineBoardWidth();
@@ -70,6 +66,8 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
     let maxLife = gameDefaults.maxLife;
     let valueQue: values[] = ["Vertrauen", "Bodenständigkeit", "Leistung", "Verbundenheit", "Respekt"];
     const [gameEffect, setGameEffect] = useState<"shake" | "smallerPad" | "blackout" | "none" | "velocityYChange">("none");
+    let isSpawningBubble = useRef(false);
+    let hasInitalizedKeyListeners = useRef(false);
 
     let player1: player = {
         x: 2,
@@ -130,7 +128,6 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
         }
     };
     const score = useRef<number>(0);
-    const navigate = useNavigate();
 
     const detectCollision = (a: any, b: any) => {
         return (
@@ -142,14 +139,26 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
     };
 
     const [backgroundAudio] = useState(new Audio(backgroundMusic));
+    const hasRun = useRef(false);
+
+    async function triggerRunBgSound() {
+        await backgroundAudio.play();
+        hasRun.current = true;
+    }
 
     useEffect(() => {
+        if (hasRun.current) {
+            return;
+        }
         backgroundAudio.volume = 0.07;
-        backgroundAudio.play();
+        triggerRunBgSound();
+        askedQuestionsSet.clear();
 
         return () => {
-            backgroundAudio.pause();
-            backgroundAudio.currentTime = 0;
+            if (hasRun.current) {
+                backgroundAudio.pause();
+                backgroundAudio.currentTime = 0;
+            }
         };
     }, []);
 
@@ -158,9 +167,9 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
     };
 
     const startBubbleTimer = () => {
-        if (isSpawningBubble) return;
+        if (isSpawningBubble.current) return;
 
-        isSpawningBubble = true;
+        isSpawningBubble.current = true;
         const spawnInterval = Math.random() * 5000 + (12000);
         setTimeout(spawnBubble, spawnInterval);
     };
@@ -173,7 +182,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
     }
 
     const handleCorrectAnswer = () => {
-        isSpawningBubble = false;
+        isSpawningBubble.current = false;
         score.current += timeRef.current;
         nextValue();
         setIsQuestion(false);
@@ -186,7 +195,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
     }
 
     const handleWrongAnswer = () => {
-        isSpawningBubble = false;
+        isSpawningBubble.current = false;
         setIsQuestion(false);
         nextValue();
 
@@ -494,6 +503,10 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
     }, [isPlaying1]);
 
     useEffect(() => {
+        if (isSpawningBubble.current) {
+            return;
+        }
+
         board = document.getElementById("board") as HTMLCanvasElement;
         board.height = boardHeight;
         board.width = boardWidth;
@@ -559,16 +572,21 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
 
         startBubbleTimer();
 
+        hasInitalizedKeyListeners.current = true;
+
         return () => {
-            resetTimer();
-            // clearInterval(intervall);
-            window.removeEventListener("keydown", movePlayer);
-            window.removeEventListener("keyup", stopMovingPlayer);
-            if (animationFrame) {
-                cancelAnimationFrame(animationFrame);
+            if (hasInitalizedKeyListeners.current) {
+                console.log("DESTROYYYYYYYYYyy")
+                resetTimer();
+                // clearInterval(intervall);
+                window.removeEventListener("keydown", movePlayer);
+                window.removeEventListener("keyup", stopMovingPlayer);
+                if (animationFrame) {
+                    cancelAnimationFrame(animationFrame);
+                }
+                removeGamePadListener(gamePadHandler, padIndex);
+                isSpawningBubble.current = false;
             }
-            removeGamePadListener(gamePadHandler, padIndex);
-            isSpawningBubble = false;
         };
     }, []);
 
@@ -597,7 +615,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
 
                 <div className="stat place-items-center">
                     <div className="stat-figure text-secondary">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-8 h-8 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     </div>
                     <div className="stat-title">Punkte</div>
                     <div className="stat-value text-secondary glow">{score.current}</div>
@@ -605,7 +623,7 @@ const GameField: React.FC<MultiplePlayerModeProps> = ({
 
                 <div className="stat place-items-center">
                     <div className="stat-figure text-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-8 h-8 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                     </div>
                     <div className="stat-title">Leben</div>
                     <div className="stat-value opacity-75">{life}</div>

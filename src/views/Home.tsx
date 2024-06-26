@@ -18,13 +18,13 @@ const Home: React.FC<HomeProps> = ({ }) => {
   const [gameMode, setGameMode] = useState(localStorage.getItem('gameMode') ? parseInt(localStorage.getItem('gameMode') || '0') : 0)
   const navigate = useNavigate()
 
-  const goToGame = (): void => {
-    playSound(buttonClickSound)
+  const goToGame = async () => {
+    await playSound(buttonClickSound)
     navigate('/game')
   }
 
-  const goToHighscore = (): void => {
-    playSound(buttonClickSound)
+  const goToHighscore = async () => {
+    await playSound(buttonClickSound)
     navigate('/scores')
   }
 

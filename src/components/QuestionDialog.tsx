@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { Question, QuestionDialogProps, gamepad } from "../utils/types";
 import questions from "../assets/questions.json";
 import { addGamePadListener, isDownPressed, isUpPressed, removeGamePadListener } from "../utils/gamepad";
@@ -6,6 +6,7 @@ import { gameDefaults } from "../views/Game";
 import correctSound from "../assets/correct.mp3";
 import wrongSound from "../assets/wrong.mp3";
 import { playSound } from "../utils/board";
+export const askedQuestionsSet = new Set();
 
 const state: any = {
     question: undefined,
@@ -14,7 +15,6 @@ const state: any = {
 };
 
 const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
-    value,
     correct,
     wrong,
 }) => {
@@ -23,22 +23,18 @@ const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
     const [isWrong, setIsWrong] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [timer, setTimer] = useState(gameDefaults.questionSeconds);
-    let timeout: any;
+    let timeoutRef: any = useRef(null);
 
-    useEffect(() => {
-        if (timer > 0) {
-            timeout = setTimeout(() => setTimer(timer - 1), 1000);
-            return () => clearTimeout(timeout);
+    const handleSpace = useCallback(() => {
+        const answerToIndex = indexToAlpha(activeIndex);
+        if (answerToIndex === question?.answer) {
+            hasCorrect();
         } else {
             hasWrong();
         }
 
-        return () => {
-            if (timeout) {
-                clearTimeout(timeout);
-            }
-        };
-    }, [timer]);
+        clearTimeout(timeoutRef.current);
+    }, [activeIndex, question]);
 
     const indexToAlpha = (index: number): string => {
         switch (index) {
@@ -55,124 +51,128 @@ const QuestionDialogCmp: React.FC<QuestionDialogProps> = ({
         }
     };
 
-    const handleSpace = () => {
-        const answerToIndex = indexToAlpha(state.activeIndex);
-        if (answerToIndex == state?.question?.answer) {
-            hasCorrect();
-        } else {
-            hasWrong();
-        }
-
-        clearTimeout(timeout);
-    };
-
-    function hasWrong() {
-        if (state.isDone) return;
-
-        state.isDone = true;
-        playSound(wrongSound);
+    const hasWrong = useCallback(async () => {
         setIsWrong(true);
+        await playSound(wrongSound);
         setTimeout(() => {
             wrong();
         }, 2000);
-    }
+    }, [wrong]);
 
-    function hasCorrect() {
-        state.isDone = true;
-        playSound(correctSound);
+    const hasCorrect = useCallback(async () => {
         setIsCorrect(true);
+        await playSound(correctSound);
         setTimeout(() => {
             correct();
         }, 2000);
-    }
+    }, [correct]);
 
     useEffect(() => {
-        state.activeIndex = activeIndex;
-        state.question = question;
-    }, [activeIndex, question]);
-
-    useEffect(() => {
-        // const questionToCategory = questions.filter((q) => q.category == value);
-        // const randoms = questions.filter((o) => o.category === "random");
-        // const allQuestions = [...questionToCategory, ...randoms];
-        const randomQuestion: Question = questions[Math.floor(Math.random() * questions.length)];
-        setQuestion(randomQuestion);
-        state.isDone = false;
-
-        const handleKeyPress = (event: KeyboardEvent) => {
-            event.preventDefault();
-            event.stopPropagation();
-
-            switch (event.key) {
-                case 'ArrowUp':
-                    const newIndex = state.activeIndex > 0 ? state.activeIndex - 1 : 0;
-                    setActiveIndex(newIndex);
-                    break;
-                case 'ArrowDown':
-                    const newIndexD = state.activeIndex < 3 ? state.activeIndex + 1 : 3;
-                    setActiveIndex(newIndexD);
-                    break;
-                case ' ':
-                    handleSpace();
-                    break;
-                default:
-                    break;
+        const getNewQuestion = () => {
+            let remainingQuestions = questions.filter(q => !askedQuestionsSet.has(q.question));
+            if (remainingQuestions.length === 0) {
+                askedQuestionsSet.clear();
+                remainingQuestions = questions;
             }
+            const randomQuestion = remainingQuestions[Math.floor(Math.random() * remainingQuestions.length)];
+            askedQuestionsSet.add(randomQuestion.question);
+            return randomQuestion;
         };
 
-        window.addEventListener('keydown', handleKeyPress);
+        const newQuestion = getNewQuestion();
+        setQuestion(newQuestion);
+        setIsWrong(false);
+        setIsCorrect(false);
+        setTimer(gameDefaults.questionSeconds);
 
-        const gamePadhandler = (input: gamepad) => {
-            if (input.type === 'button' && input.pressed) {
+        timeoutRef.current = setTimeout(() => {
+            hasWrong();
+        }, gameDefaults.questionSeconds * 1000);
+
+        return () => {
+            clearTimeout(timeoutRef.current);
+        };
+    }, []);
+
+    const handleKeyPress = useCallback((event: KeyboardEvent) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        switch (event.key) {
+            case 'ArrowUp':
+                setActiveIndex(prevIndex => prevIndex > 0 ? prevIndex - 1 : 0);
+                break;
+            case 'ArrowDown':
+                setActiveIndex(prevIndex => prevIndex < 3 ? prevIndex + 1 : 3);
+                break;
+            case ' ':
                 handleSpace();
-                return;
-            }
+                break;
+            default:
+                break;
+        }
+    }, [handleSpace]);
 
-            if (isDownPressed(input)) {
-                const newIndex = state.activeIndex > 0 ? state.activeIndex - 1 : 0;
-                setActiveIndex(newIndex);
-            }
+    const gamePadhandler = useCallback((input: gamepad) => {
+        if (input.type === 'button' && input.pressed) {
+            handleSpace();
+            return;
+        }
 
-            if (isUpPressed(input)) {
-                const newIndexD = state.activeIndex < 3 ? state.activeIndex + 1 : 3;
-                setActiveIndex(newIndexD);
-            }
-        };
+        if (isDownPressed(input)) {
+            setActiveIndex(prevIndex => prevIndex > 0 ? prevIndex - 1 : 0);
+        }
 
+        if (isUpPressed(input)) {
+            setActiveIndex(prevIndex => prevIndex < 3 ? prevIndex + 1 : 3);
+        }
+    }, [handleSpace]);
+
+    useEffect(() => {
+        window.addEventListener('keydown', handleKeyPress);
         const padIndex = addGamePadListener(gamePadhandler);
 
         return () => {
             window.removeEventListener('keydown', handleKeyPress);
             removeGamePadListener(gamePadhandler, padIndex);
         };
-    }, []);
+    }, [handleKeyPress, gamePadhandler]);
 
     return (
         <div className="hero min-h-screen bg-base-300 fixed z-20 top-0 opacity-95 backdrop-blur-md">
             <div className="hero-content text-left flex-col px-4">
-                {!isWrong && !isCorrect && <><div className="title-wrapper mb-8 floating">
-                    <h1 className="sweet-title sweet-title-mixed game-title">
-                        <span data-text={timer}>{timer}</span>
-                    </h1>
-                </div>
-                    <div className="text-2xl font-bold">{question?.question}</div>
-                    <div className="flex flex-col gap-2">
-                        <div className={`kbd w-full text-xl ${activeIndex === 0 ? 'bg-primary' : ''}`}>{question?.A}</div>
-                        <div className={`kbd text-xl ${activeIndex === 1 ? 'bg-primary' : ''}`}>{question?.B}</div>
-                        <div className={`kbd text-xl ${activeIndex === 2 ? 'bg-primary' : ''}`}>{question?.C}</div>
-                        <div className={`kbd text-xl ${activeIndex === 3 ? 'bg-primary' : ''}`}>{question?.D}</div>
-                    </div></>}
+                {!isWrong && !isCorrect && (
+                    <>
+                        <div className="title-wrapper mb-8 floating">
+                            <h1 className="sweet-title sweet-title-mixed game-title">
+                                <span data-text={timer}>{timer}</span>
+                            </h1>
+                        </div>
+                        <div className="text-2xl font-bold">{question?.question}</div>
+                        <div className="flex flex-col gap-2">
+                            <div className={`kbd w-full text-xl ${activeIndex === 0 ? 'bg-primary' : ''}`}>{question?.A}</div>
+                            <div className={`kbd text-xl ${activeIndex === 1 ? 'bg-primary' : ''}`}>{question?.B}</div>
+                            <div className={`kbd text-xl ${activeIndex === 2 ? 'bg-primary' : ''}`}>{question?.C}</div>
+                            <div className={`kbd text-xl ${activeIndex === 3 ? 'bg-primary' : ''}`}>{question?.D}</div>
+                        </div>
+                    </>
+                )}
 
-                {isWrong && <><div className="title-wrapper mb-8 splash-in">
-                    <h1 className="sweet-title sweet-title-red">
-                        <span data-text={"Falsch..."}>{"Falsch..."}</span>
-                    </h1>
-                </div> </>}
-                {isCorrect && <><div className="title-wrapper mb-8 splash-in">
-                    <h1 className="sweet-title sweet-title-green">
-                        <span data-text={"Richtig!"}>{"Richtig!"}</span>
-                    </h1>
-                </div> </>}
+                {isWrong && (
+                    <div className="title-wrapper mb-8 splash-in">
+                        <h1 className="sweet-title sweet-title-red">
+                            <span data-text={"Falsch..."}>{"Falsch..."}</span>
+                        </h1>
+                    </div>
+                )}
+
+                {isCorrect && (
+                    <div className="title-wrapper mb-8 splash-in">
+                        <h1 className="sweet-title sweet-title-green">
+                            <span data-text={"Richtig!"}>{"Richtig!"}</span>
+                        </h1>
+                    </div>
+                )}
             </div>
         </div>
     );
